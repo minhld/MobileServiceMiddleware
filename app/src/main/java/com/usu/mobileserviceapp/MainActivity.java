@@ -1,4 +1,4 @@
-package com.usu.mobileservice;
+package com.usu.mobileserviceapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
