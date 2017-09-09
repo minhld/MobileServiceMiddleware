@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import com.usu.mobileservice.jobex.JobDataParser;
+import com.usu.mobileservice.jobex.DataParser;
 
 import java.io.ByteArrayOutputStream;
 
@@ -12,7 +12,7 @@ import java.io.ByteArrayOutputStream;
  *
  * Created by minhld on 01/28/2016.
  */
-public class JobDataParserImpl implements JobDataParser {
+public class DataParserImpl implements DataParser {
 
     @Override
     public Class getDataClass() {

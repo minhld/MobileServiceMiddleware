@@ -1,13 +1,13 @@
 package com.usu.mobileservice.jobimpls;
 
-import com.usu.mobileservice.jobex.JobDataParser;
+import com.usu.mobileservice.jobex.DataParser;
 import com.usu.mobileservice.utils.Utils;
 
 /**
  *
  * Created by minhld on 01/28/2016.
  */
-public class EmptyDataParserImpl implements JobDataParser {
+public class EmptyDataParserImpl implements DataParser {
 
     @Override
     public Class getDataClass() {

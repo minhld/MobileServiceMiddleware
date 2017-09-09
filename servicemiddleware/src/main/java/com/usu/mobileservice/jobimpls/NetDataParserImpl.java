@@ -1,6 +1,6 @@
 package com.usu.mobileservice.jobimpls;
 
-import com.usu.mobileservice.jobex.JobDataParser;
+import com.usu.mobileservice.jobex.DataParser;
 import com.usu.mobileservice.jobimpls.NetJobImpl.WebPart;
 import com.usu.mobileservice.utils.Utils;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
  *
  * Created by minhld on 01/28/2016.
  */
-public class NetDataParserImpl implements JobDataParser {
+public class NetDataParserImpl implements DataParser {
 
     @Override
     public Class getDataClass() {

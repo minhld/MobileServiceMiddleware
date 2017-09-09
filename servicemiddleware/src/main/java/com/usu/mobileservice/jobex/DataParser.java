@@ -6,7 +6,7 @@ package com.usu.mobileservice.jobex;
  *
  * Created by minhld on 11/23/2015.
  */
-public interface JobDataParser {
+public interface DataParser {
     /**
      * get class definition of the data object which you use to exchange
      * to other devices

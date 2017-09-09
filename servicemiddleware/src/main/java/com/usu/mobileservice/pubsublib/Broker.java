@@ -2,9 +2,9 @@ package com.usu.mobileservice.pubsublib;
 
 import android.content.Context;
 
-import com.usu.mobileservice.jobex.JobDataParser;
+import com.usu.mobileservice.jobex.DataParser;
 import com.usu.mobileservice.jobex.JobPackage;
-import com.usu.mobileservice.jobimpls.JobDataParserImpl;
+import com.usu.mobileservice.jobimpls.DataParserImpl;
 import com.usu.mobileservice.pbsbjob.AckServer;
 import com.usu.mobileservice.utils.Utils;
 
@@ -215,16 +215,16 @@ public class Broker extends Thread {
                         // ====== ====== ====== EXAMPLE SECTION ====== ====== ======
 
                         // ====== image-processing example ======
-                        JobDataParser dataParser = new JobDataParserImpl(); // JobHelper.getDataParser(parentContext, AckServerListener.clientId, jobBytes);
+                        DataParser dataParser = new DataParserImpl(); // JobHelper.getDataParser(parentContext, AckServerListener.clientId, jobBytes);
 
                         // // ====== word-count example ======
-                        // JobDataParser dataParser = new WordDataParserImpl();
+                        // DataParser dataParser = new WordDataParserImpl();
 
                         // // ====== internet-share example ======
-                        // JobDataParser dataParser = new NetDataParserImpl();
+                        // DataParser dataParser = new NetDataParserImpl();
 
                         // // ====== empty-job example ======
-                        // JobDataParser dataParser = new EmptyDataParserImpl();
+                        // DataParser dataParser = new EmptyDataParserImpl();
 
                         // ====== ====== ====== ====== ====== ======
 
@@ -392,9 +392,9 @@ public class Broker extends Thread {
         public int cummPartNum;
         public int totalPartNum;
         public Object placeholder;
-        private JobDataParser dataParser;
+        private DataParser dataParser;
 
-        public JobMergeInfo(String clientId, Object emptyPlaceholder, JobDataParser dataParser) {
+        public JobMergeInfo(String clientId, Object emptyPlaceholder, DataParser dataParser) {
             this.clientId = clientId;
             this.cummPartNum = 0;
             this.totalPartNum = 0;

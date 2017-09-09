@@ -1,6 +1,6 @@
 package com.usu.mobileservice.jobimpls;
 
-import com.usu.mobileservice.jobex.JobDataParser;
+import com.usu.mobileservice.jobex.DataParser;
 
 import org.json.JSONObject;
 
@@ -16,7 +16,7 @@ import java.util.Iterator;
  *
  * Created by minhld on 01/28/2016.
  */
-public class WordDataParserImpl implements JobDataParser {
+public class WordDataParserImpl implements DataParser {
 
 	@Override
     public Class getDataClass() {

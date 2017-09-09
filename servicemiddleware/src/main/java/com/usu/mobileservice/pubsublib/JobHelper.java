@@ -2,8 +2,8 @@ package com.usu.mobileservice.pubsublib;
 
 import android.content.Context;
 
+import com.usu.mobileservice.jobex.DataParser;
 import com.usu.mobileservice.jobex.Job;
-import com.usu.mobileservice.jobex.JobDataParser;
 import com.usu.mobileservice.utils.Utils;
 
 import org.apache.commons.io.FileUtils;
@@ -22,7 +22,7 @@ import dalvik.system.DexClassLoader;
 public class JobHelper {
 
     static Job job = null;
-    static JobDataParser dataParser = null;
+    static DataParser dataParser = null;
 
     /**
      * get job class by loading job.jar package (which is prematurely stored in local storage)
@@ -58,7 +58,7 @@ public class JobHelper {
      * @param jobBytes
      * @return
      */
-    public static JobDataParser getDataParser(Context c, String clientId, byte[] jobBytes) {
+    public static DataParser getDataParser(Context c, String clientId, byte[] jobBytes) {
         // if the data parser is already available, just return it
         if (JobHelper.dataParser != null) {
             return JobHelper.dataParser;
@@ -67,7 +67,7 @@ public class JobHelper {
         //
         try {
             Class dataParserClass = preliminaryWork(c, clientId, jobBytes, Utils.PARSER_CLASS_NAME);
-            JobHelper.dataParser = (JobDataParser) dataParserClass.newInstance();
+            JobHelper.dataParser = (DataParser) dataParserClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
