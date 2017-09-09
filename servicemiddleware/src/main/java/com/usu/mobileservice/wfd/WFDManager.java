@@ -147,14 +147,14 @@ public class WFDManager extends BroadcastReceiver {
      */
     public void discoverPeers(){
         // TEST: start the clock
-        Utils.appendTestInfo("discover", "discovery starts");
+        // Utils.appendTestInfo("discover", "discovery starts");
 
         this.mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 
             @Override
             public void onSuccess() {
                 // TEST: end the clock
-                Utils.appendTestInfo("discover", "discovery ends");
+                // Utils.appendTestInfo("discover", "discovery ends");
 
                 writeLog("discovery called successfully");
             }
@@ -185,7 +185,7 @@ public class WFDManager extends BroadcastReceiver {
         config.wps.setup = WpsInfo.PBC;
 
         // TEST: start connect clock
-        Utils.appendTestInfo("connect", "connect " + device.deviceName + " starts");
+        // Utils.appendTestInfo("connect", "connect " + device.deviceName + " starts");
         connectedDeviceName = device.deviceName;
 
         mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
@@ -291,7 +291,7 @@ public class WFDManager extends BroadcastReceiver {
                 Utils.connectedDevices.put(device.deviceName, xDev);
 
                 if (device.deviceName.equals(connectedDeviceName)) {
-                    Utils.appendTestInfo("connect", "connect " + connectedDeviceName + " ends");
+                    // Utils.appendTestInfo("connect", "connect " + connectedDeviceName + " ends");
                 }
             }
         }

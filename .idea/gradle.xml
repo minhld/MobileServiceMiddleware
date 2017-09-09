@@ -9,7 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/nsdchat" />
             <option value="$PROJECT_DIR$/servicemiddleware" />
+            <option value="$PROJECT_DIR$/svcmid" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

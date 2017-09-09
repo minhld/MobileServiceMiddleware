@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MobileServiceMiddleware.iml" filepath="$PROJECT_DIR$/MobileServiceMiddleware.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nsdchat/nsdchat.iml" filepath="$PROJECT_DIR$/nsdchat/nsdchat.iml" />
       <module fileurl="file://$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" filepath="$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" />
+      <module fileurl="file://$PROJECT_DIR$/svcmid/svcmid.iml" filepath="$PROJECT_DIR$/svcmid/svcmid.iml" />
     </modules>
   </component>
 </project>

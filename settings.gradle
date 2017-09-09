@@ -1,1 +1,1 @@
-include ':app', ':servicemiddleware'
+include ':app', ':servicemiddleware', ':svcmid', ':nsdchat'
