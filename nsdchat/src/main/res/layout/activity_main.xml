@@ -29,7 +29,7 @@
             android:id="@+id/advertise_btn"
             android:layout_width="96dp"
             android:layout_height="64dp"
-            android:onClick="clickAdvertise"
+            android:onClick="clickRegister"
             android:text="@string/register" />
 
         <Button
