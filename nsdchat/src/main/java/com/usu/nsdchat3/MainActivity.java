@@ -1,4 +1,4 @@
-package com.usu.nsdchat;
+package com.usu.nsdchat3;
 
 import android.Manifest;
 import android.net.wifi.WpsInfo;
@@ -10,9 +10,10 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.usu.nsdchat.R;
 
 import java.util.HashMap;
 import java.util.Map;

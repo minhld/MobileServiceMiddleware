@@ -1,4 +1,4 @@
-package com.usu.nsdchat;
+package com.usu.nsdchat3;
 
 /**
  * Authored by KaushalD on 8/28/2016.

@@ -1,4 +1,4 @@
-package com.usu.nsdchat;
+package com.usu.nsdchat3;
 
 import android.content.Context;
 import android.os.Build;
