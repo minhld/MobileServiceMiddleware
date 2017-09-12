@@ -30,9 +30,9 @@ public class Supporter {
         wfdManager.setBroadCastListener(new WiFiDiscoveryManager.BroadCastListener() {
             @Override
             public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
-                deviceListAdapter.clear();
-                deviceListAdapter.addAll(deviceList);
-                deviceListAdapter.notifyDataSetChanged();
+                // deviceListAdapter.clear();
+                // deviceListAdapter.addAll(deviceList);
+                // deviceListAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -56,8 +56,8 @@ public class Supporter {
                 }
             }
         });
-        mIntentFilter = wfdManager.getSingleIntentFilter();
-        deviceListAdapter = new WiFiDevicesAdapter(this.context, R.layout.row_devices, wfdManager);
+        // mIntentFilter = wfdManager.getSingleIntentFilter();
+        // deviceListAdapter = new WiFiDevicesAdapter(this.context, R.layout.row_devices, wfdManager);
 
     }
 

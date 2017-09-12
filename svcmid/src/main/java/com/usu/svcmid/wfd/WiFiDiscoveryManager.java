@@ -23,7 +23,8 @@ import utils.WiFiDevicesAdapter;
 
 public class WiFiDiscoveryManager {
     public static final String TXTRECORD_PROP_AVAILABLE = "available";
-    public static final String SERVICE_INSTANCE = "_svc";
+    public static final String SERVICE_INSTANCE_1 = "_svc_1";
+    public static final String SERVICE_INSTANCE_2 = "_svc_2";
     public static final String SERVICE_REG_TYPE = "_presence._tcp";
 
     private WifiP2pManager mManager;
@@ -47,13 +48,13 @@ public class WiFiDiscoveryManager {
         Map<String, String> record = new HashMap<String, String>();
         record.put(TXTRECORD_PROP_AVAILABLE, "visible");
 
-        WifiP2pDnsSdServiceInfo service = WifiP2pDnsSdServiceInfo.newInstance(
-                SERVICE_INSTANCE, SERVICE_REG_TYPE, record);
-        mManager.addLocalService(mChannel, service, new WifiP2pManager.ActionListener() {
+        WifiP2pDnsSdServiceInfo service1 = WifiP2pDnsSdServiceInfo.newInstance(
+                SERVICE_INSTANCE_1, SERVICE_REG_TYPE, record);
+        mManager.addLocalService(mChannel, service1, new WifiP2pManager.ActionListener() {
 
             @Override
             public void onSuccess() {
-                writeLog("Added Local Service");
+                writeLog("Added Local Service " + SERVICE_INSTANCE_1);
             }
 
             @Override
@@ -62,7 +63,22 @@ public class WiFiDiscoveryManager {
             }
         });
 
-        discoverService();
+        WifiP2pDnsSdServiceInfo service2 = WifiP2pDnsSdServiceInfo.newInstance(
+                SERVICE_INSTANCE_2, SERVICE_REG_TYPE, record);
+        mManager.addLocalService(mChannel, service2, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                writeLog("Added Local Service " + SERVICE_INSTANCE_2);
+            }
+
+            @Override
+            public void onFailure(int error) {
+                writeLog("Failed to add a service");
+            }
+        });
+
+        // discoverService();
     }
 
     private void discoverService() {
@@ -74,7 +90,7 @@ public class WiFiDiscoveryManager {
                 public void onDnsSdServiceAvailable(String instanceName, String registrationType,
                                                     WifiP2pDevice srcDevice) {
                     // A service has been discovered. Is this our app?
-                    if (instanceName.equalsIgnoreCase(SERVICE_INSTANCE)) {
+//                    if (instanceName.equalsIgnoreCase(SERVICE_INSTANCE)) {
 //                        // update the UI and add the item the discovered device.
 //                        WiFiDirectServicesList fragment = (WiFiDirectServicesList)
 //                                            getFragmentManager().findFragmentByTag("services");
@@ -88,7 +104,7 @@ public class WiFiDiscoveryManager {
 //                            adapter.notifyDataSetChanged();
 //                            Log.d(TAG, "onBonjourServiceAvailable " + instanceName);
 //                        }
-                    }
+//                    }
 
                 }
             }, new WifiP2pManager.DnsSdTxtRecordListener() {
