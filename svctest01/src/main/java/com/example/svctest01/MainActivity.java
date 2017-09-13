@@ -5,17 +5,22 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import com.usu.svcmid.wfd.WiFiDiscoveryManager;
+import com.usu.svcmid.wfd.Supporter;
 
 import utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
-
+    ListView deviceList;
     TextView infoText;
+    EditText chatInput;
 
-    WiFiDiscoveryManager wifiManager;
+    // WiFiDiscoveryManager wifiManager;
+    // WiFiServicesAdapter wifiAdapter;
+    Supporter supporter;
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -34,18 +39,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        infoText = (TextView) findViewById(R.id.status);
+        supporter = new Supporter(this, mHandler);
 
-        wifiManager = new WiFiDiscoveryManager(this);
-        wifiManager.setWFDHandler(mHandler);
+        deviceList = (ListView) findViewById(R.id.deviceList);
+        deviceList.setAdapter(supporter.getServiceAdapter());
+        infoText = (TextView) findViewById(R.id.status);
+        chatInput = (EditText) findViewById(R.id.chatInput);
+
+
+//        wifiManager = new WiFiDiscoveryManager(this);
+//        wifiManager.setWFDHandler(mHandler);
+//
+//        wifiAdapter = new WiFiServicesAdapter(this, wifiManager);
+//        deviceList.setAdapter(wifiAdapter);
     }
 
     public void clickRegister(View v) {
-        wifiManager.startRegistration();
+        supporter.startRegister();
     }
 
     public void clickDiscover(View v) {
-        wifiManager.discoverService();
+        supporter.startDiscovery();
     }
 
     public void clickConnect(View v) {

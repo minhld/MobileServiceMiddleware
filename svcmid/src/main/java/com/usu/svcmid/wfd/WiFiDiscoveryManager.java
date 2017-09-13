@@ -9,14 +9,11 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Handler;
-import android.util.Log;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import utils.Utils;
-import utils.WiFiDevicesAdapter;
 
 /**
  * Created by minhld on 9/9/2017.
@@ -35,7 +32,7 @@ public class WiFiDiscoveryManager {
 
     private Activity context;
     private Handler mHandler;
-    private BroadCastListener broadCastListener;
+    private WiFiDiscoveryListener wifiListener;
 
     public void setWFDHandler(Handler sHandler) {
         this.mHandler = sHandler;
@@ -81,10 +78,10 @@ public class WiFiDiscoveryManager {
             }
         });
 
-        // discoverService();
+        // startDiscovery();
     }
 
-    public void discoverService() {
+    public void startDiscovery() {
         // Register listeners for DNS-SD services. These are callbacks invoked
         // by the system when a service is actually discovered.
         mManager.setDnsSdResponseListeners(mChannel,
@@ -92,13 +89,20 @@ public class WiFiDiscoveryManager {
                 @Override
                 public void onDnsSdServiceAvailable(String instanceName, String registrationType,
                                                     WifiP2pDevice srcDevice) {
-                    // A service has been discovered. Is this our app?
-                    if (instanceName.equalsIgnoreCase(SERVICE_INSTANCE_1)) {
+                    // A service has been discovered.
+                    if (instanceName.contains("_svc")) {
+                        // update the UI and add the item the discovered device.
+                        WiFiP2pService service = new WiFiP2pService();
+                        service.device = srcDevice;
+                        service.name = instanceName;
+                        service.type = registrationType;
+                        wifiListener.serverFound(service);
+
 //                        // update the UI and add the item the discovered device.
 //                        WiFiDirectServicesList fragment = (WiFiDirectServicesList)
 //                                            getFragmentManager().findFragmentByTag("services");
 //                        if (fragment != null) {
-//                            WiFiDevicesAdapter adapter = ((WiFiDirectServicesList.WiFiDevicesAdapter) fragment.getListAdapter());
+//                            WiFiServicesAdapter adapter = ((WiFiDirectServicesList.WiFiServicesAdapter) fragment.getListAdapter());
 //                            WiFiP2pService service = new WiFiP2pService();
 //                            service.device = srcDevice;
 //                            service.name = instanceName;
@@ -151,19 +155,19 @@ public class WiFiDiscoveryManager {
         });
     }
 
-    public void setBroadCastListener(BroadCastListener pdlcListener){
-        this.broadCastListener = pdlcListener;
+    public void setWiFiDiscoveryListener(WiFiDiscoveryListener mListener){
+        this.wifiListener = mListener;
     }
 
     /**
      * this class is to throw events from WFD Manager back to the UI thread
      */
-    public interface BroadCastListener {
+    public interface WiFiDiscoveryListener {
         /**
          * this is called when the device list changes
-         * @param deviceList
+         * @param service
          */
-        public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList);
+        public void serverFound(WiFiP2pService service);
 
         /**
          * called when wifi direct connection is established
