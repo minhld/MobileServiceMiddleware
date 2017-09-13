@@ -2,6 +2,7 @@ package com.usu.svcmid.wfd;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -42,6 +43,8 @@ public class WiFiDiscoveryManager {
 
     public WiFiDiscoveryManager(Activity context) {
         this.context = context;
+        mManager = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(context, context.getMainLooper(), null);
     }
 
     public void startRegistration() {
@@ -81,7 +84,7 @@ public class WiFiDiscoveryManager {
         // discoverService();
     }
 
-    private void discoverService() {
+    public void discoverService() {
         // Register listeners for DNS-SD services. These are callbacks invoked
         // by the system when a service is actually discovered.
         mManager.setDnsSdResponseListeners(mChannel,
@@ -90,7 +93,7 @@ public class WiFiDiscoveryManager {
                 public void onDnsSdServiceAvailable(String instanceName, String registrationType,
                                                     WifiP2pDevice srcDevice) {
                     // A service has been discovered. Is this our app?
-//                    if (instanceName.equalsIgnoreCase(SERVICE_INSTANCE)) {
+                    if (instanceName.equalsIgnoreCase(SERVICE_INSTANCE_1)) {
 //                        // update the UI and add the item the discovered device.
 //                        WiFiDirectServicesList fragment = (WiFiDirectServicesList)
 //                                            getFragmentManager().findFragmentByTag("services");
@@ -104,7 +107,7 @@ public class WiFiDiscoveryManager {
 //                            adapter.notifyDataSetChanged();
 //                            Log.d(TAG, "onBonjourServiceAvailable " + instanceName);
 //                        }
-//                    }
+                    }
 
                 }
             }, new WifiP2pManager.DnsSdTxtRecordListener() {
