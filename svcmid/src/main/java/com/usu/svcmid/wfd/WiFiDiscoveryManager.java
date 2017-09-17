@@ -13,7 +13,7 @@ import android.os.Handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import utils.Utils;
+import com.usu.svcmid.utils.Utils;
 
 /**
  * Created by minhld on 9/9/2017.

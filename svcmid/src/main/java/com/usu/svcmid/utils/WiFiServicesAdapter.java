@@ -1,4 +1,4 @@
-package utils;
+package com.usu.svcmid.utils;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;

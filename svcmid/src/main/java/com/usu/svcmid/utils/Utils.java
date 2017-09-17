@@ -1,4 +1,4 @@
-package utils;
+package com.usu.svcmid.utils;
 
 /**
  * Created by lee on 9/12/17.

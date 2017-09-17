@@ -5,7 +5,7 @@ import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Handler;
 
-import utils.WiFiServicesAdapter;
+import com.usu.svcmid.utils.WiFiServicesAdapter;
 
 /**
  * Created by lee on 9/12/17.
@@ -45,6 +45,7 @@ public class Supporter {
 
     public void startRegister() {
         wfdManager.startRegistration();
+        wfdManager.startDiscovery();
     }
 
     public void startDiscovery() {

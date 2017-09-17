@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.usu.svcmid.wfd.Supporter;
 
-import utils.Utils;
+import com.usu.svcmid.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
     ListView deviceList;
