@@ -79,6 +79,22 @@ public class WiFiDiscoveryManager {
      * on the others.
      */
     public void startDiscovery() {
+
+        // remove service request before adding a new one
+        if (mServiceRequest != null) {
+            mManager.removeServiceRequest(mChannel, mServiceRequest, new WifiP2pManager.ActionListener() {
+                @Override
+                public void onSuccess() {
+                    writeLog("Removed [last session] service discovery request");
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    writeLog("Failed removing [last session] service discovery request");
+                }
+            });
+        }
+
         // Register listeners for DNS-SD services. These are callbacks invoked
         // by the system when a service is actually discovered.
         mManager.setDnsSdResponseListeners(mChannel,
