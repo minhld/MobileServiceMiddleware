@@ -13,17 +13,16 @@ import android.os.Handler;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.usu.svcmid.utils.Constants;
 import com.usu.svcmid.utils.Utils;
 
 /**
  * Created by minhld on 9/9/2017.
  */
-
 public class WiFiDiscoveryManager {
-    public static final String TXTRECORD_PROP_AVAILABLE = "available";
-    public static final String SERVICE_INSTANCE_1 = "_svc_1";
-    public static final String SERVICE_INSTANCE_2 = "_svc_2";
-    public static final String SERVICE_REG_TYPE = "_presence._tcp";
+
+    public static final String SERVICE_INSTANCE_1 = "svc_1";
+    public static final String SERVICE_INSTANCE_2 = "svc_2";
 
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
@@ -44,43 +43,41 @@ public class WiFiDiscoveryManager {
         mChannel = mManager.initialize(context, context.getMainLooper(), null);
     }
 
+    /**
+     * Register services to the local device, so that the other devices could
+     * discover over WiFi-Direct. This function should go with a call of
+     * <b>startDiscovery()</b> so that the registered services could be seen from outside
+     */
     public void startRegistration() {
-        Map<String, String> record = new HashMap<String, String>();
-        record.put(TXTRECORD_PROP_AVAILABLE, "visible");
+        Map<String, String> record;
+        String[] services = new String[] { SERVICE_INSTANCE_1, SERVICE_INSTANCE_2 };
+        for (int i = 0; i < services.length; i++) {
+            // adding service #i
+            record = new HashMap<String, String>();
+            record.put(Constants.TXTRECORD_PROP_AVAILABLE, "visible");
+            record.put(Constants.TXTRECORD_PROP_DEVICENAME, Utils.getDeviceName());
 
-        WifiP2pDnsSdServiceInfo service1 = WifiP2pDnsSdServiceInfo.newInstance(
-                SERVICE_INSTANCE_1, SERVICE_REG_TYPE, record);
-        mManager.addLocalService(mChannel, service1, new WifiP2pManager.ActionListener() {
+            final String svcName = Utils.getFullServiceName(services[i]);
+            WifiP2pDnsSdServiceInfo service1 = WifiP2pDnsSdServiceInfo.newInstance(
+                                                    svcName, Constants.SERVICE_REG_TYPE, record);
+            mManager.addLocalService(mChannel, service1, new WifiP2pManager.ActionListener() {
+                @Override
+                public void onSuccess() {
+                    writeLog("Added local service [" + svcName + "]");
+                }
 
-            @Override
-            public void onSuccess() {
-                writeLog("Added Local Service " + SERVICE_INSTANCE_1);
-            }
-
-            @Override
-            public void onFailure(int error) {
-                writeLog("Failed to add a service");
-            }
-        });
-
-        WifiP2pDnsSdServiceInfo service2 = WifiP2pDnsSdServiceInfo.newInstance(
-                SERVICE_INSTANCE_2, SERVICE_REG_TYPE, record);
-        mManager.addLocalService(mChannel, service2, new WifiP2pManager.ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                writeLog("Added Local Service " + SERVICE_INSTANCE_2);
-            }
-
-            @Override
-            public void onFailure(int error) {
-                writeLog("Failed to add a service");
-            }
-        });
-
-        // startDiscovery();
+                @Override
+                public void onFailure(int error) {
+                    writeLog("Failed to add a service [" + svcName + "]");
+                }
+            });
+        }
     }
 
+    /**
+     * This function starts discovery services locate on the local device or
+     * on the others.
+     */
     public void startDiscovery() {
         // Register listeners for DNS-SD services. These are callbacks invoked
         // by the system when a service is actually discovered.
@@ -118,9 +115,10 @@ public class WiFiDiscoveryManager {
                 // A new TXT record is available. Pick up the advertised
                 // buddy name.
                 @Override
-                public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> record,
-                                                        WifiP2pDevice device) {
-                    writeLog(device.deviceName + " is " + record.get(TXTRECORD_PROP_AVAILABLE));
+                public void onDnsSdTxtRecordAvailable(String fullDomainName,
+                                        Map<String, String> record, WifiP2pDevice device) {
+                    writeLog(record.get(Constants.TXTRECORD_PROP_DEVICENAME) + " is " +
+                                    record.get(Constants.TXTRECORD_PROP_AVAILABLE));
                 }
             }
         );

@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,8 +19,6 @@ public class MainActivity extends AppCompatActivity {
     TextView infoText;
     EditText chatInput;
 
-    // WiFiDiscoveryManager wifiManager;
-    // WiFiServicesAdapter wifiAdapter;
     Supporter supporter;
     Handler mHandler = new Handler() {
         @Override
@@ -44,14 +43,9 @@ public class MainActivity extends AppCompatActivity {
         deviceList = (ListView) findViewById(R.id.deviceList);
         deviceList.setAdapter(supporter.getServiceAdapter());
         infoText = (TextView) findViewById(R.id.status);
+        infoText.setMovementMethod(new ScrollingMovementMethod());
+
         chatInput = (EditText) findViewById(R.id.chatInput);
-
-
-//        wifiManager = new WiFiDiscoveryManager(this);
-//        wifiManager.setWFDHandler(mHandler);
-//
-//        wifiAdapter = new WiFiServicesAdapter(this, wifiManager);
-//        deviceList.setAdapter(wifiAdapter);
     }
 
     public void clickRegister(View v) {

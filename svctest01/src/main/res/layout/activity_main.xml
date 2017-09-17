@@ -51,7 +51,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:inputType="text"
-            android:layout_toLeftOf="@+id/send_btn"/>
+            android:layout_toLeftOf="@+id/send_btn"
+            android:gravity="bottom"/>
 
         <Button
             android:id="@+id/send_btn"

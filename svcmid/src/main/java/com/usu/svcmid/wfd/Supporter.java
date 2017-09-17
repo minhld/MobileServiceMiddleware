@@ -7,6 +7,9 @@ import android.os.Handler;
 
 import com.usu.svcmid.utils.WiFiServicesAdapter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by lee on 9/12/17.
  */
@@ -17,6 +20,9 @@ public class Supporter {
     IntentFilter mIntentFilter;
     WiFiServicesAdapter serviceAdapter;
 
+    // hold the virtual service list obtained from the local and remote devices
+    Map<String, WiFiP2pService> serviceList = new HashMap<>();
+
     public Supporter(Activity context, final Handler mainHandler) {
         this.context = context;
 
@@ -25,8 +31,15 @@ public class Supporter {
         wfdManager.setWiFiDiscoveryListener(new WiFiDiscoveryManager.WiFiDiscoveryListener() {
             @Override
             public void serverFound(WiFiP2pService service) {
-                serviceAdapter.add(service);
-                serviceAdapter.notifyDataSetChanged();
+                // avoid duplicated services
+                if (!serviceList.containsKey(service.name)) {
+                    // add to the managed list
+                    serviceList.put(service.name, service);
+
+                    // add to the adapter to be available on the list
+                    serviceAdapter.add(service);
+                    serviceAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -49,7 +62,9 @@ public class Supporter {
     }
 
     public void startDiscovery() {
+        // remove the service lists before discovery and adding the new ones
         serviceAdapter.clear();
+        serviceList.clear();
         wfdManager.startDiscovery();
     }
 }
