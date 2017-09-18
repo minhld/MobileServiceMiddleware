@@ -90,8 +90,8 @@ public class WiFiServicesAdapter extends ArrayAdapter<WiFiP2pService> {
                     break;
                 }
                 case WifiP2pDevice.FAILED: {
-                    // attempting to connect
-                    // mManager.connectToADevice(device, null);
+                    // attempt connecting to the service again
+                    mManager.connectToService(service);
                     break;
                 }
             }

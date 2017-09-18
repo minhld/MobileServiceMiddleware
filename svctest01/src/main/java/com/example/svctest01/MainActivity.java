@@ -48,6 +48,16 @@ public class MainActivity extends AppCompatActivity {
         chatInput = (EditText) findViewById(R.id.chatInput);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
     public void clickRegister(View v) {
         supporter.startRegister();
     }

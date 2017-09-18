@@ -3,6 +3,8 @@ package com.usu.svcmid.wfd;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -169,8 +171,28 @@ public class WiFiDiscoveryManager {
         });
     }
 
-    public void connectToService(WiFiP2pService service) {
+    public void connectToService(final WiFiP2pService service) {
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = service.device.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
 
+        // remove the previous service request if it's still available
+        if (mServiceRequest != null) {
+            mManager.removeServiceRequest(mChannel, mServiceRequest, null);
+        }
+
+        // connect to the service
+        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                writeLog("Connected to service [" + service.name + "]");
+            }
+
+            @Override
+            public void onFailure(int errorCode) {
+                writeLog("Failed connecting to service [" + service.name + "]");
+            }
+        });
     }
 
     public void disconnectService(WiFiP2pService service) {
