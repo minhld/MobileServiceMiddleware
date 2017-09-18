@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/nsdchat/nsdchat.iml" filepath="$PROJECT_DIR$/nsdchat/nsdchat.iml" />
       <module fileurl="file://$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" filepath="$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" />
-      <module fileurl="file://$PROJECT_DIR$/svcmid/svcmid.iml" filepath="$PROJECT_DIR$/svcmid/svcmid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/svcmid1/svcmid1.iml" filepath="$PROJECT_DIR$/svcmid1/svcmid1.iml" />
       <module fileurl="file://$PROJECT_DIR$/svctest01/svctest01.iml" filepath="$PROJECT_DIR$/svctest01/svctest01.iml" />
     </modules>
   </component>
