@@ -30,7 +30,7 @@ public class Supporter {
         wfdManager.setWFDHandler(mainHandler);
         wfdManager.setWiFiDiscoveryListener(new WiFiDiscoveryManager.WiFiDiscoveryListener() {
             @Override
-            public void serverFound(WiFiP2pService service) {
+            public void serviceFound(WiFiP2pService service) {
                 // avoid duplicated services
                 if (!serviceList.containsKey(service.name)) {
                     // add to the managed list
@@ -43,8 +43,12 @@ public class Supporter {
             }
 
             @Override
-            public void wfdEstablished(WifiP2pInfo p2pInfo) {
-
+            public void serviceRecordFound(String serviceName, Map<String, String> record) {
+                // find the service key and update its record
+                WiFiP2pService service = serviceList.get(serviceName);
+                service.record = record;
+                // add the update the service info
+                serviceList.put(serviceName, service);
             }
         });
 

@@ -77,11 +77,12 @@ public class WiFiServicesAdapter extends ArrayAdapter<WiFiP2pService> {
                 }
                 case WifiP2pDevice.CONNECTED: {
                     // just disconnect, no confirmation
-                    // mManager.disconnect(service.name, null);
+                    mManager.disconnectService(service);
                     break;
                 }
                 case WifiP2pDevice.AVAILABLE: {
-                    // mManager.connectToADevice(service, null);
+                    // connect to the selected service
+                    mManager.connectToService(service);
                     break;
                 }
                 case WifiP2pDevice.UNAVAILABLE: {

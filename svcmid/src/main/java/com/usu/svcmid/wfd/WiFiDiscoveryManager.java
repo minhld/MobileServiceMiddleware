@@ -109,7 +109,7 @@ public class WiFiDiscoveryManager {
                         service.device = srcDevice;
                         service.name = instanceName;
                         service.type = registrationType;
-                        wifiListener.serverFound(service);
+                        wifiListener.serviceFound(service);
 
 //                        // update the UI and add the item the discovered device.
 //                        WiFiDirectServicesList fragment = (WiFiDirectServicesList)
@@ -169,6 +169,14 @@ public class WiFiDiscoveryManager {
         });
     }
 
+    public void connectToService(WiFiP2pService service) {
+
+    }
+
+    public void disconnectService(WiFiP2pService service) {
+
+    }
+
     public void setWiFiDiscoveryListener(WiFiDiscoveryListener mListener){
         this.wifiListener = mListener;
     }
@@ -178,16 +186,17 @@ public class WiFiDiscoveryManager {
      */
     public interface WiFiDiscoveryListener {
         /**
-         * this is called when the device list changes
+         * called when a service has been found
          * @param service
          */
-        public void serverFound(WiFiP2pService service);
+        public void serviceFound(WiFiP2pService service);
 
         /**
-         * called when wifi direct connection is established
-         * @param p2pInfo
+         * called when the record of a server has been found
+         * @param serviceName
+         * @param record
          */
-        public void wfdEstablished(WifiP2pInfo p2pInfo);
+        public void serviceRecordFound(String serviceName, Map<String, String> record);
     }
 
     public void writeLog(final String msg){
