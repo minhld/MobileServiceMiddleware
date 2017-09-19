@@ -22,10 +22,13 @@ public class Supporter {
 
     // hold the virtual service list obtained from the local and remote devices
     Map<String, WiFiP2pService> serviceList = new HashMap<>();
+    boolean isGroupOwner;
+    boolean isGroupFormed;
 
     public Supporter(Activity context, final Handler mainHandler) {
         this.context = context;
 
+        // configure the wifi-direct manager
         wfdManager = new WiFiDiscoveryManager(this.context);
         wfdManager.setWFDHandler(mainHandler);
         wfdManager.setWiFiDiscoveryListener(new WiFiDiscoveryManager.WiFiDiscoveryListener() {
@@ -50,9 +53,15 @@ public class Supporter {
                 // add the update the service info
                 serviceList.put(serviceName, service);
             }
+
+            @Override
+            public void p2pEstablished(WifiP2pInfo p2pInfo) {
+                isGroupOwner = p2pInfo.isGroupOwner;
+                isGroupFormed = p2pInfo.groupFormed;
+            }
         });
 
-        // mIntentFilter = wfdManager.getSingleIntentFilter();
+        mIntentFilter = wfdManager.getSingleIntentFilter();
         serviceAdapter = new WiFiServicesAdapter(this.context, wfdManager);
     }
 
@@ -60,16 +69,43 @@ public class Supporter {
         return this.serviceAdapter;
     }
 
-    public void startRegister() {
+    /**
+     * start registration, including discovery
+     */
+    public void startRegistration() {
         wfdManager.startRegistration();
-        wfdManager.startDiscovery();
+        startDiscovery();
     }
 
+    /**
+     * start the discovery only
+     */
     public void startDiscovery() {
         // remove the service lists before discovery and adding the new ones
         serviceAdapter.clear();
         serviceList.clear();
+
+        // prepare & start discovery
+        wfdManager.prepareDiscovery();
         wfdManager.startDiscovery();
+    }
+
+    /**
+     * this should be added at the end of onPause on main activity
+     */
+    public void addOnPause() {
+        if (wfdManager != null && mIntentFilter != null) {
+            this.context.unregisterReceiver(wfdManager.getBroadCastReceiver());
+        }
+    }
+
+    /**
+     * this should be added at the end of onResume on main activity
+     */
+    public void addOnResume() {
+        if (wfdManager != null && mIntentFilter != null) {
+            this.context.registerReceiver(wfdManager.getBroadCastReceiver(), mIntentFilter);
+        }
     }
 }
 

@@ -51,15 +51,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        supporter.addOnResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        supporter.addOnPause();
     }
 
     public void clickRegister(View v) {
-        supporter.startRegister();
+        supporter.startRegistration();
     }
 
     public void clickDiscover(View v) {
