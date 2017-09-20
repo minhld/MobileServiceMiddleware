@@ -28,5 +28,5 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha5'
     compile 'com.jakewharton:butterknife:8.3.0'
     compile 'com.jakewharton:butterknife-compiler:8.3.0'
-    compile project(':svcmid1')
+    compile project(':servicemiddleware')
 }
