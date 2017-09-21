@@ -1,4 +1,12 @@
-package com.usu.servicemiddleware.annotationprocessor;
+package com.usu.servicemiddleware.processors;
+
+import java.util.Set;
+
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.TypeElement;
 
 /**
  * Created by lee on 9/20/17.
