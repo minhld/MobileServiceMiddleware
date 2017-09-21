@@ -9,10 +9,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        testAnnotation();
-    }
-
-    private void testAnnotation() {
 
     }
-}
+
+    @Status
+    public class User {
+        String firstName;
+        String lastName;
+        String city;
+    }}

@@ -1,4 +1,4 @@
-package com.usu.mobileservice.annotationchecker;
+package com.usu.servicemiddleware.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-@interface Status {
+@interface StatusInfo {
+
 }
