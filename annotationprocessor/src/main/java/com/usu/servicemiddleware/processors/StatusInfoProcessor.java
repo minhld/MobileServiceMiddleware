@@ -3,6 +3,7 @@ package com.usu.servicemiddleware.processors;
 import com.google.auto.service.AutoService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +43,8 @@ public class StatusInfoProcessor extends AbstractProcessor {
     private Messager messager = null;
     private Filer filer = null;
 
+    // The processor has to have an empty constructor
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment){
         super.init(processingEnvironment);
@@ -50,7 +53,7 @@ public class StatusInfoProcessor extends AbstractProcessor {
     }
 
     @Override
-    public boolean process(Set<? extends TypeElement> annoations, RoundEnvironment env) {
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
         //get all elements annotated with StatusInfo
         Collection<? extends Element> annotatedElements = env.getElementsAnnotatedWith(StatusInfo.class);
 
