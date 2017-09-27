@@ -11,9 +11,9 @@
             <option value="$PROJECT_DIR$/annotationchecker" />
             <option value="$PROJECT_DIR$/annotationprocessor" />
             <option value="$PROJECT_DIR$/annotations" />
-            <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/newservicemiddleware" />
             <option value="$PROJECT_DIR$/nsdchat" />
+            <option value="$PROJECT_DIR$/service-ui-test" />
             <option value="$PROJECT_DIR$/servicemiddleware" />
             <option value="$PROJECT_DIR$/svctest01" />
           </set>

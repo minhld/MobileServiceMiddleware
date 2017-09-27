@@ -23,14 +23,14 @@
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
-            android:textSize="11sp"
+            android:textSize="10sp"
             android:gravity="center_vertical" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textColor="#ccc"
             android:id="@+id/device_details"
             android:singleLine="true"

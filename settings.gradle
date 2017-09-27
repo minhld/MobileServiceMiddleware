@@ -1,1 +1,1 @@
-include ':app', ':servicemiddleware', ':newservicemiddleware', ':nsdchat', ':svctest01', ':annotationchecker', ':annotationprocessor', ':annotations'
+include ':service-ui-test', ':servicemiddleware', ':newservicemiddleware', ':nsdchat', ':svctest01', ':annotationchecker', ':annotationprocessor', ':annotations'

@@ -9,13 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin" >
 
     <TextView
+        android:id="@+id/infoText"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:id="@+id/infoText"
-        android:textSize="11sp"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom" />
+        android:layout_alignParentEnd="true"
+        android:gravity="bottom"
+        android:textSize="10sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +57,7 @@
 
     <Button
         android:text="Discover"
-        android:textSize="11sp"
+        android:textSize="10sp"
         android:layout_width="75dp"
         android:layout_height="45dp"
         android:id="@+id/discoverBtn"
@@ -65,8 +65,8 @@
         android:layout_alignParentStart="true" />
 
     <Button
-        android:text="Crt. Group"
-        android:textSize="11sp"
+        android:text="Create Group"
+        android:textSize="10sp"
         android:layout_width="70dp"
         android:layout_height="45dp"
         android:id="@+id/createGroupBtn"
@@ -75,7 +75,7 @@
 
     <Button
         android:text="Server"
-        android:textSize="11sp"
+        android:textSize="10sp"
         android:layout_width="65dp"
         android:layout_height="45dp"
         android:id="@+id/pubBtn"
@@ -84,7 +84,7 @@
 
     <Button
         android:text="Client"
-        android:textSize="11sp"
+        android:textSize="10sp"
         android:layout_width="70dp"
         android:layout_height="45dp"
         android:id="@+id/subBtn"
@@ -93,7 +93,7 @@
 
     <Button
         android:text="Worker"
-        android:textSize="11sp"
+        android:textSize="10sp"
         android:layout_width="60dp"
         android:layout_height="45dp"
         android:id="@+id/workerBtn"

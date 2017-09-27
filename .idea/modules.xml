@@ -6,9 +6,9 @@
       <module fileurl="file://$PROJECT_DIR$/annotationchecker/annotationchecker.iml" filepath="$PROJECT_DIR$/annotationchecker/annotationchecker.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotationprocessor/annotationprocessor.iml" filepath="$PROJECT_DIR$/annotationprocessor/annotationprocessor.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotations/annotations.iml" filepath="$PROJECT_DIR$/annotations/annotations.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/newservicemiddleware/newservicemiddleware.iml" filepath="$PROJECT_DIR$/newservicemiddleware/newservicemiddleware.iml" />
       <module fileurl="file://$PROJECT_DIR$/nsdchat/nsdchat.iml" filepath="$PROJECT_DIR$/nsdchat/nsdchat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-ui-test/service-ui-test.iml" filepath="$PROJECT_DIR$/service-ui-test/service-ui-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" filepath="$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" />
       <module fileurl="file://$PROJECT_DIR$/svctest01/svctest01.iml" filepath="$PROJECT_DIR$/svctest01/svctest01.iml" />
     </modules>
