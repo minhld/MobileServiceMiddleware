@@ -1,5 +1,7 @@
 package com.usu.mobileservice.jobimpls;
 
+import com.usu.mobileservice.jobex.DataParser;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -9,48 +11,37 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
-
 /**
  *
  * Created by minhld on 01/28/2016.
  */
-public class WordDataParserImpl implements com.usu.mobileservice.jobex.DataParser {
+public class WordDataParserImpl implements DataParser {
 
-	@Override
+    @Override
     public Class getDataClass() {
         return String.class;
     }
 
     @Override
     public Object loadObject(String path) throws Exception {
-        String url = "http://129.123.7.172:3883/sm/html/b8.html";
+        String url = "http://129.123.7.172:3883/sm/html/b19.html";
         return getTextFromHttps(url);
     }
 
     @Override
     public Object parseBytesToObject(byte[] byteData) throws Exception {
-    	return new String(byteData);
+        return new String(byteData);
     }
 
     @Override
     public byte[] parseObjectToBytes(Object objData) throws Exception {
-    	if (objData instanceof String) {
-    		return ((String) objData).getBytes();
-    	} else if (objData instanceof TopWords) {
-    		return ((TopWords) objData).words.toString().getBytes();
-    	}
-    	return new byte[0];
+        return ((String) objData).getBytes();
     }
 
     @Override
     public byte[] getPartFromObject(Object data, int firstOffset, int lastOffset) {
         String dataStr = (String) data;
-        int dataLen = dataStr.length();
-        double firstIdx = dataLen * ((double) firstOffset / 100);
-        double lastIdx = dataLen * ((double) lastOffset / 100);
-        if (firstIdx < 0) firstIdx = 0;
-        if (lastIdx >= dataLen) lastIdx = dataLen - 1;
-        String subData = dataStr.substring((int) firstIdx, (int) lastIdx);
+        String subData = dataStr.substring(firstOffset, lastOffset);
         return subData.getBytes();
 
     }
@@ -101,27 +92,28 @@ public class WordDataParserImpl implements com.usu.mobileservice.jobex.DataParse
     }
 
     private String getTextFromHttps(String url) {
-        try {
-            // open http connection
-            URL urlObj = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+//        try {
+//            // open http connection
+//            URL urlObj = new URL(url);
+//            HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+//
+//            // get the page's data
+//            StringBuffer buffer = new StringBuffer();
+//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//            String line = "";
+//            while ((line = br.readLine()) != null){
+//                buffer.append(line);
+//            }
+//            br.close();
+//
+//            return buffer.toString();
+//            //
+//            // return Jsoup.parse(buffer.toString()).text();
+//            // return android.text.Html.fromHtml(buffer.toString()).toString();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-            // get the page's data
-            StringBuffer buffer = new StringBuffer();
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            while ((line = br.readLine()) != null){
-                buffer.append(line);
-            }
-            br.close();
-
-            //
-            // return Jsoup.parse(buffer.toString()).text();
-            // return android.text.Html.fromHtml(buffer.toString()).toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return "";
+        return "hello, is it me you are looking for? hello, is it me you are looking for? hello, is it me you are looking for? hello, is it me you are looking for? hello, is it me you are looking for? hello, is it me you are looking for?  ";
     }
 }

@@ -129,8 +129,8 @@ public abstract class AckServer extends Thread {
      */
     public interface AckListener {
         /**
-         * this event occurs when all the ACKs from workers are received
-         * broker will consider the DRL values and divide job to the tasks
+         * this event occurs when all the ACKs from Workers are received,
+         * Broker will consider the DRL values and divide job to the tasks
          * that match with DRL values
          */
         public void allAcksReceived();

@@ -2,10 +2,13 @@ package com.usu.mobileservice.pubsublib;
 
 import android.content.Context;
 
+import com.usu.mobileservice.jobex.DataParser;
 import com.usu.mobileservice.jobex.Job;
 import com.usu.mobileservice.jobex.JobPackage;
 import com.usu.mobileservice.jobimpls.BitmapJobImpl;
 import com.usu.mobileservice.jobimpls.JobDataParserImpl;
+import com.usu.mobileservice.jobimpls.WordDataParserImpl;
+import com.usu.mobileservice.jobimpls.WordJobImpl;
 import com.usu.mobileservice.pbsbjob.AckClient;
 import com.usu.mobileservice.utils.Utils;
 
@@ -114,7 +117,7 @@ public abstract class Worker extends Thread {
     }
 
     /**
-     * default
+     * default Request Resolver for the Worker
      *
      * @param packageBytes
      * @return
@@ -131,13 +134,16 @@ public abstract class Worker extends Thread {
 
             // // ====== image-processing example ======
             // // initiate data parser and job objects from the request package
-            com.usu.mobileservice.jobex.DataParser dataParser = new JobDataParserImpl(); // JobHelper.getDataParser(this.context, this.workerId, request.jobBytes);
-            // Job job = new JobImpl(); // JobHelper.getJob(this.context, this.workerId, request.jobBytes);
-            Job job = new BitmapJobImpl();
+            // DataParser dataParser = new JobDataParserImpl();
+            // Job job = new JobImpl();
+            // // JobHelper.getDataParser(this.context, this.workerId, request.jobBytes);
+            // // JobHelper.getJob(this.context, this.workerId, request.jobBytes);
+
+            // Job job = new BitmapJobImpl();
 
             // // ====== word-count example ======
-            // DataParser dataParser = new WordDataParserImpl();
-            // Job job = new WordJobImpl();
+            DataParser dataParser = new WordDataParserImpl();
+            Job job = new WordJobImpl();
 
             // // ====== internet-share example ======
             // DataParser dataParser = new NetDataParserImpl();

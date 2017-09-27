@@ -2,8 +2,10 @@ package com.usu.mobileservice.pubsublib;
 
 import android.content.Context;
 
+import com.usu.mobileservice.jobex.DataParser;
 import com.usu.mobileservice.jobex.JobPackage;
 import com.usu.mobileservice.jobimpls.JobDataParserImpl;
+import com.usu.mobileservice.jobimpls.WordDataParserImpl;
 import com.usu.mobileservice.pbsbjob.AckServer;
 import com.usu.mobileservice.utils.Utils;
 
@@ -13,17 +15,20 @@ import java.util.HashMap;
 
 /**
  * Created by minhld on 8/4/2016.
- * This class work as a broker among the devices in mobile network.
- * The broker has several modes. To switch mode, please use the mode
- * type switcher:
- *  - Publish-Subscribe mode
- *  - Router mode
+ * Modification is initiated from Sep 27, 2017
+ *
+ * <b>Broker</b> - serves as a broker of the network. Only one instance of broker could
+ * operate at a time.
  *
  */
 public class Broker extends Thread {
     private String brokerIp = "*";
 
+    // store the list of connected Workers
     private HashMap<String, WorkerInfo> workerList;
+
+    // holds a placeholder list. Each Job's placeholder is an element of this buffer
+    // according to that, The Broker can handle multiple Jobs at a time
     private static HashMap<String, JobMergeInfo> jobMergeList;
 
     private Context parentContext;
@@ -46,8 +51,9 @@ public class Broker extends Thread {
     }
 
     /**
-     * this function is only called when developer invoke pub-sub mode (default)
-     * which is for data transmission only
+     * Create a network of Publish-Subscribe model. This function is called when
+     * developer uses Pub-Sub model (default) for Data Transmission purpose.
+     * - No ACK exchanges
      */
     private void initPubSubMode() {
         ZMQ.Context context = ZMQ.context(1);
@@ -71,29 +77,30 @@ public class Broker extends Thread {
     }
 
     /**
-     * this function is called when developer invoke router mode
-     * which is for job distribution
+     * Create a network of Router model. This function is called when developer
+     * use Router model for Job Distribution purpose.
+     * - ACK exchanges
      */
     private void initRouterMode() {
         ZMQ.Context context = ZMQ.context(1);
 
-        // initiate publish socket
+        // initiate Front-end Router socket
         String frontendPort = "tcp://" + this.brokerIp + ":" + Utils.BROKER_XSUB_PORT;
         ZMQ.Socket frontend = context.socket(ZMQ.ROUTER);
         frontend.bind(frontendPort);
 
-        // initiate subscribe socket
+        // initiate Back-end Router socket
         String backendPort = "tcp://" + this.brokerIp + ":" + Utils.BROKER_XPUB_PORT;
         this.backend = context.socket(ZMQ.ROUTER);
         backend.bind(backendPort);
 
-        // Queue of available workers
+        // initiate Queue of available workers
         workerList = new HashMap<String, WorkerInfo>();
 
         // Map of job placeholders - hold the placeholders of all the current executing jobs
         Broker.jobMergeList = new HashMap<String, JobMergeInfo>();
 
-        // initiate ACK server
+        // initiate ACK server - to listen to the ACK signals from Workers and Requesters
         ackServer = new AckServerListener(parentContext, context, this.brokerIp);
 
         String workerId, clientId;
@@ -107,7 +114,7 @@ public class Broker extends Thread {
             if (items.poll() < 0)
                 break;
 
-            // HANDLE WORKER'S ACTIVITY ON BACK-END
+            // ------ HANDLE WORKER'S ACTIVITY ON BACK-END ------
             if (items.pollin(0)) {
                 // queue worker address for LRU routing
                 // FIRST FRAME is WORKER ID
@@ -142,8 +149,8 @@ public class Broker extends Thread {
                     // retrieve the job's placeholder
                     JobMergeInfo jobMergeInfo = mergeTaskResults(clientId, reply);
 
-                    // check if the job's placeholder is fully filled
-                    // if so, return the placeholder back to the client
+                    // check if the Job's placeholder is fully filled
+                    // if so, return the placeholder back to the Requester
                     // otherwise, skip this one and wait for more parts to come
                     if (jobMergeInfo.isPlaceholderFilled()) {
                         // flush them out to the front-end
@@ -156,12 +163,12 @@ public class Broker extends Thread {
 
                         // end the clock of total job
                         long jobDurr = System.currentTimeMillis() - startTime;
-                        System.out.println("[broker] total time doing job is: " + jobDurr + "ms");
+                        System.out.println("[broker] total time handling job is: " + jobDurr + "ms");
                     }
                 }
             }
 
-            // HANDLE CLIENT'S ACTIVITIES AT FRONT-END
+            // ------ HANDLE REQUESTER'S ACTIVITIES AT FRONT-END ------
             if (items.pollin(1)) {
                 // now get next client request, route to LRU worker
                 // client request is [address][empty][request]
@@ -214,10 +221,11 @@ public class Broker extends Thread {
                         // ====== ====== ====== EXAMPLE SECTION ====== ====== ======
 
                         // ====== image-processing example ======
-                        com.usu.mobileservice.jobex.DataParser dataParser = new JobDataParserImpl(); // JobHelper.getDataParser(parentContext, AckServerListener.clientId, jobBytes);
+                        // DataParser dataParser = new JobDataParserImpl();
+                        // JobHelper.getDataParser(parentContext, AckServerListener.clientId, jobBytes);
 
                         // // ====== word-count example ======
-                        // DataParser dataParser = new WordDataParserImpl();
+                        DataParser dataParser = new WordDataParserImpl();
 
                         // // ====== internet-share example ======
                         // DataParser dataParser = new NetDataParserImpl();
@@ -328,8 +336,8 @@ public class Broker extends Thread {
             float drl = (float) Utils.getResponse(respStr, "drl");
             String workerId = (String) Utils.getResponse(respStr, "id");
 
-            // compare DRL with client's DRL and add to the list
-            // will not add more than MAX_WORKERS_PER_JOB devices (default is 3)
+            // compare DRL with Requester's DRL and add to the list
+            // will not add more than MAX_WORKERS_PER_JOB devices (default is 3 or 5)
             // if (drl > 0 && advancedWorkerList.size() < Utils.MAX_WORKERS_PER_JOB) {
             if (drl >= AckServerListener.request.DRL && advancedWorkerList.size() < Utils.MAX_WORKERS_PER_JOB) {
                 totalDRL = (advancedWorkerList.size() == 0) ? drl : totalDRL + drl;
@@ -339,7 +347,7 @@ public class Broker extends Thread {
     }
 
     /**
-     * this function merge
+     * this merges a Task Result to its placeholder
      *
      * @param useClientId
      * @param taskBytes
@@ -384,7 +392,8 @@ public class Broker extends Thread {
     }
 
     /**
-     * this class contains information of job combination
+     * Job-Merge-Info contains information for Job Result merging
+     * after results have been received from the Workers
      */
     static class JobMergeInfo {
         public String clientId;
@@ -393,7 +402,7 @@ public class Broker extends Thread {
         public Object placeholder;
         private com.usu.mobileservice.jobex.DataParser dataParser;
 
-        public JobMergeInfo(String clientId, Object emptyPlaceholder, com.usu.mobileservice.jobex.DataParser dataParser) {
+        public JobMergeInfo(String clientId, Object emptyPlaceholder, DataParser dataParser) {
             this.clientId = clientId;
             this.cummPartNum = 0;
             this.totalPartNum = 0;

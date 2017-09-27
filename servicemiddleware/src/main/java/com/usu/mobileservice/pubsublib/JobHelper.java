@@ -12,8 +12,8 @@ import java.io.File;
 import dalvik.system.DexClassLoader;
 
 /**
- * job helper helps loading job and data parser classes, as well as support invocation
- * of these classes' functions.
+ * Job Helper helps loading job and data parser classes, as well as supporting
+ * invocation of these classes' functions.
  *
  * Created by minhld on 10/19/2016.
  */
