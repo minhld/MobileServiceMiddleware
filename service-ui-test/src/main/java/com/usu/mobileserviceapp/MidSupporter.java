@@ -6,6 +6,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Handler;
 
+import com.usu.mobileservice.utils.WifiPeerListAdapter;
 import com.usu.mobileservice.wfd.WFDManager;
 
 import java.util.Collection;

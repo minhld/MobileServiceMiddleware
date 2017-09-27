@@ -1,4 +1,4 @@
-package com.usu.mobileserviceapp;
+package com.usu.mobileservice.utils;
 
 /**
  * Created by minhld on 01/28/2016
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.usu.mobileservice.R;
 import com.usu.mobileservice.wfd.WFDManager;
 
 import java.util.List;
