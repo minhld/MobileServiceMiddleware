@@ -147,7 +147,7 @@ public class StatusInfoProcessor extends AbstractProcessor {
         String sformat = "String.format(\"";
 
         for (VariableElement e : fields) {
-            sformat += e.getSimpleName() + " - %s ";
+            sformat += e.getSimpleName() + " - %ss ";
         }
         sformat += "\"";
 
