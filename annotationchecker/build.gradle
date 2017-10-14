@@ -32,4 +32,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':annotations')
     annotationProcessor project(':annotationprocessor')
+    compile project(':newservicemiddleware')
 }
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8

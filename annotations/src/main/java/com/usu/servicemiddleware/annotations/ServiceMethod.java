@@ -5,8 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface StatusInfo {
+@SuppressWarnings("unused")
+public @interface ServiceMethod {
+	// synchronization mode
+	// default is Asynchronous
+	SyncMode syncMode() default SyncMode.Async;
 
 }

@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.usu.servicemiddleware.annotations.CompileTest;
-
 public class MainActivity extends AppCompatActivity {
     String LOG = "MainActivity-Test";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         exeClassBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                compile();
+//                compile();
             }
         });
 
@@ -51,21 +49,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void compile() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("public class HelloWorld implements com.usu.servicemiddleware.processors.DoStuff {\n");
-        sb.append("    @Override \n");
-        sb.append("    public void doStuff() {\n");
-        sb.append("        System.out.println(\"Hello world!!!\");\n");
-        sb.append("    }\n");
-        sb.append("}\n");
-
-        try {
-            String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-            String javaFile = downloadPath + "/HelloWorld.java";
-            CompileTest.compile(javaFile, "HelloWorld", sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    void compile() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("public class HelloWorld implements com.usu.servicemiddleware.processors.DoStuff {\n");
+//        sb.append("    @Override \n");
+//        sb.append("    public void doStuff() {\n");
+//        sb.append("        System.out.println(\"Hello world!!!\");\n");
+//        sb.append("    }\n");
+//        sb.append("}\n");
+//
+//        try {
+//            String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+//            String javaFile = downloadPath + "/HelloWorld.java";
+//            CompileTest.compile(javaFile, "HelloWorld", sb.toString());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

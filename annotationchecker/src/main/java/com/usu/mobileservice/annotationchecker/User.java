@@ -1,11 +1,11 @@
 package com.usu.mobileservice.annotationchecker;
 
-import com.usu.servicemiddleware.annotations.StatusInfo;
+import com.usu.servicemiddleware.annotations.MobileService;
 
 /**
  * Created by lee on 9/23/17.
  */
-@StatusInfo
+@MobileService
 public class User {
     String firstName;
     String lastName;
