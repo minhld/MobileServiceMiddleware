@@ -4,9 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MobileServiceMiddleware.iml" filepath="$PROJECT_DIR$/MobileServiceMiddleware.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotationchecker/annotationchecker.iml" filepath="$PROJECT_DIR$/annotationchecker/annotationchecker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/annotationprocessor/annotationprocessor.iml" filepath="$PROJECT_DIR$/annotationprocessor/annotationprocessor.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotations/annotations.iml" filepath="$PROJECT_DIR$/annotations/annotations.iml" />
-      <module fileurl="file://$PROJECT_DIR$/newservicemiddleware/newservicemiddleware.iml" filepath="$PROJECT_DIR$/newservicemiddleware/newservicemiddleware.iml" />
+      <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
+      <module fileurl="file://$PROJECT_DIR$/processors/processors.iml" filepath="$PROJECT_DIR$/processors/processors.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-share-test/service-share-test.iml" filepath="$PROJECT_DIR$/service-share-test/service-share-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-ui-test/service-ui-test.iml" filepath="$PROJECT_DIR$/service-ui-test/service-ui-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" filepath="$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" />

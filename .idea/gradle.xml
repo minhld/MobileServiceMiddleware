@@ -9,9 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/annotationchecker" />
-            <option value="$PROJECT_DIR$/annotationprocessor" />
             <option value="$PROJECT_DIR$/annotations" />
-            <option value="$PROJECT_DIR$/newservicemiddleware" />
+            <option value="$PROJECT_DIR$/network" />
+            <option value="$PROJECT_DIR$/processors" />
             <option value="$PROJECT_DIR$/service-share-test" />
             <option value="$PROJECT_DIR$/service-ui-test" />
             <option value="$PROJECT_DIR$/servicemiddleware" />
