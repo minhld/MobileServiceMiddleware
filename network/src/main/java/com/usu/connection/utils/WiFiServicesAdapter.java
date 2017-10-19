@@ -1,4 +1,4 @@
-package com.usu.svcmid.utils;
+package com.usu.connection.utils;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.usu.svcmid.R;
-import com.usu.svcmid.wfd.WiFiDiscoveryManager;
-import com.usu.svcmid.wfd.WiFiP2pService;
+import com.usu.connection.R;
+import com.usu.connection.wfd.WiFiDiscoveryManager;
+import com.usu.connection.wfd.WiFiP2pService;
 
 import java.util.List;
 

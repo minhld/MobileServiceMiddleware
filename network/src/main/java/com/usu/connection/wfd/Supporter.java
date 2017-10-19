@@ -1,11 +1,11 @@
-package com.usu.svcmid.wfd;
+package com.usu.connection.wfd;
 
 import android.app.Activity;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Handler;
 
-import com.usu.svcmid.utils.WiFiServicesAdapter;
+import com.usu.connection.utils.WiFiServicesAdapter;
 
 import java.util.HashMap;
 import java.util.Map;

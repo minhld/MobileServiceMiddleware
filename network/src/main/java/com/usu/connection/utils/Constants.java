@@ -1,4 +1,4 @@
-package com.usu.svcmid.utils;
+package com.usu.connection.utils;
 
 /**
  * Created by minhld on 9/17/2017.

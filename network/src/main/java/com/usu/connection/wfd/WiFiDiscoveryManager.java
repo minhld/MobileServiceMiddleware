@@ -1,4 +1,4 @@
-package com.usu.svcmid.wfd;
+package com.usu.connection.wfd;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -17,8 +17,8 @@ import android.os.Handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.usu.svcmid.utils.Constants;
-import com.usu.svcmid.utils.Utils;
+import com.usu.connection.utils.Constants;
+import com.usu.connection.utils.Utils;
 
 /**
  * Created by minhld on 9/9/2017.

@@ -1,4 +1,4 @@
-package com.usu.svcmid.utils;
+package com.usu.connection.utils;
 
 import android.os.Build;
 

@@ -10,9 +10,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.usu.svcmid.wfd.Supporter;
+import com.usu.connection.wfd.Supporter;
 
-import com.usu.svcmid.utils.Utils;
+import com.usu.connection.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
     ListView deviceList;
