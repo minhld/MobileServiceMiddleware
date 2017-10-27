@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
       <module fileurl="file://$PROJECT_DIR$/processors/processors.iml" filepath="$PROJECT_DIR$/processors/processors.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-share-test/service-share-test.iml" filepath="$PROJECT_DIR$/service-share-test/service-share-test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/service-ui-test/service-ui-test.iml" filepath="$PROJECT_DIR$/service-ui-test/service-ui-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" filepath="$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" />
       <module fileurl="file://$PROJECT_DIR$/svctest01/svctest01.iml" filepath="$PROJECT_DIR$/svctest01/svctest01.iml" />
     </modules>
