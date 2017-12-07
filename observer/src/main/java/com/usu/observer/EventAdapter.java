@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
  * Created by minhld on 12/7/2017.
  */
 
-public class EventAdapter extends ArrayAdapter<MainActivity.Event> {
+public class EventAdapter extends ArrayAdapter<Event> {
     public EventAdapter(Context context, int layoutId) {
         super(context, layoutId);
     }

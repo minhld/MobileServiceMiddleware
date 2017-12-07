@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefresh;
     private ListView mListView;
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
      * loading class
      */
     class LoadList extends AsyncTask {
+        List<Event> events;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Object doInBackground(Object[] objects) {
+            events = EventDb.getEvents(10, 0);
             publishProgress();
             return null;
         }
@@ -72,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             mLoadingBar.setVisibility(View.INVISIBLE);
+            // mEventAdapter.addAll(events);
             mEventAdapter.notifyDataSetChanged();
             mSwipeRefresh.setRefreshing(false);
         }

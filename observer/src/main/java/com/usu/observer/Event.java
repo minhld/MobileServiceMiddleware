@@ -5,7 +5,7 @@ package com.usu.observer;
  */
 
 public class Event {
-    public long time;
+    public String time;
     public String type;
     public String info;
 }
