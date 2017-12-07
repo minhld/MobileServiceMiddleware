@@ -6,8 +6,8 @@
       <module fileurl="file://$PROJECT_DIR$/annotationchecker/annotationchecker.iml" filepath="$PROJECT_DIR$/annotationchecker/annotationchecker.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotations/annotations.iml" filepath="$PROJECT_DIR$/annotations/annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
+      <module fileurl="file://$PROJECT_DIR$/observer/observer.iml" filepath="$PROJECT_DIR$/observer/observer.iml" />
       <module fileurl="file://$PROJECT_DIR$/processors/processors.iml" filepath="$PROJECT_DIR$/processors/processors.iml" />
-      <module fileurl="file://$PROJECT_DIR$/service-share-test/service-share-test.iml" filepath="$PROJECT_DIR$/service-share-test/service-share-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" filepath="$PROJECT_DIR$/servicemiddleware/servicemiddleware.iml" />
       <module fileurl="file://$PROJECT_DIR$/svctest01/svctest01.iml" filepath="$PROJECT_DIR$/svctest01/svctest01.iml" />
     </modules>
