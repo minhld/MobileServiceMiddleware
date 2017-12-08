@@ -1,15 +1,11 @@
 package com.usu.observer;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -19,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefresh;
     private ListView mListView;
     private ProgressBar mLoadingBar;
+
     EventAdapter mEventAdapter;
 
 
@@ -45,8 +42,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // event list view
-        mEventAdapter = new EventAdapter(this, R.layout.row_event);
+        mEventAdapter = new EventAdapter(this);
         mListView.setAdapter(mEventAdapter);
+
+        // reload data
+        new LoadList().execute();
     }
 
     /**
@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             mLoadingBar.setVisibility(View.INVISIBLE);
-            // mEventAdapter.addAll(events);
+            mEventAdapter.clear();
+            mEventAdapter.addAll(events);
             mEventAdapter.notifyDataSetChanged();
             mSwipeRefresh.setRefreshing(false);
         }
