@@ -9,5 +9,11 @@ package com.usu.tinyservice.network;
  *
  */
 public interface ReceiveListener {
-	public void dataReceived(byte[] data);
+	/**
+	 * 
+	 * @param idChain
+	 * @param funcName
+	 * @param data
+	 */
+	public void dataReceived(String idChain, String funcName, byte[] data);
 }
