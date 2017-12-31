@@ -11,7 +11,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.usu.connection.utils.DevUtils;
-import com.usu.connection.wifi.Supporter;
 
 public class MainActivity extends AppCompatActivity {
     ListView deviceList;

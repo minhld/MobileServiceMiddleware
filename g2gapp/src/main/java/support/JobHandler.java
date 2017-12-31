@@ -70,7 +70,7 @@ public class JobHandler {
     }
 
     public void connectByNormalWiFi() {
-//        WifiManager wifiManager
+//        WiFiManager wifiManager
     }
 
     /**

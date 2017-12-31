@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
     WFDSupporter wfdSupporter;
 
 //    WifiBroader wifiBroader;
-//    WifiConnector orgWifiBroader;
+//    WiFiManager orgWifiBroader;
 //    IntentFilter mIntentFilter;
 
-    WifiPeerListAdapter deviceListAdapter;
-    WifiNetworkListAdapter networkListAdapter;
+//    WifiPeerListAdapter deviceListAdapter;
+//    WiFiListAdapter networkListAdapter;
 
     Handler mainUiHandler = new Handler() {
         @Override
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
                     break;
                 }
-                case Utils.MAIN_INFO: {
+                case DevUtils.MESSAGE_INFO: {
                     String strMsg = (String) msg.obj;
                     UITools.writeLog(MainActivity.this, infoText, strMsg);
                     break;
@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
         // WiFi-Direct
         wfdSupporter = new WFDSupporter(this, mainUiHandler);
         deviceList.setAdapter(wfdSupporter.getDeviceListAdapter());
+
+        // Original WiFi Interface
 
 
 
@@ -139,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
 //        deviceList.setAdapter(deviceListAdapter);
 
 //        // ------ Prepared for Original WiFi ------
-//        orgWifiBroader = new WifiConnector(this, infoText);
+//        orgWifiBroader = new WiFiManager(this, infoText);
 //        orgWifiBroader.setSocketHandler(mainUiHandler);
-//        orgWifiBroader.setmWifiScanListener(new WifiConnector.WiFiScanListener() {
+//        orgWifiBroader.setmWifiScanListener(new WiFiManager.WiFiScanListener() {
 //            @Override
 //            public void listReceived(List<ScanResult> mScanResults) {
 //                networkListAdapter.clear();
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //
 //        // WiFi network list
-//        networkListAdapter = new WifiNetworkListAdapter(this, R.layout.row_wifi, orgWifiBroader);
+//        networkListAdapter = new WiFiListAdapter(this, R.layout.row_wifi, orgWifiBroader);
 //        wifiList.setAdapter(networkListAdapter);
 
         createGroupBtn.setOnClickListener(new View.OnClickListener() {

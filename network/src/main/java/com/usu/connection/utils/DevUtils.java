@@ -2,15 +2,18 @@ package com.usu.connection.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Date;
+import com.usu.connection.R;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,6 +84,41 @@ public class DevUtils {
     }
 
     /**
+     * open a dialog to prompt text
+     *
+     * @param c
+     * @param listener
+     */
+    public static void showInputDialog(Context c, final InputDialogListener listener, String... defs) {
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(c);
+        View promptView = layoutInflater.inflate(R.layout.input_dialog, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        if (defs.length > 0) editText.setText(defs[0]);
+
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        listener.inputDone(editText.getText().toString());
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
+    /**
      * appends a test value (key + value) to a text file in the Download folder
      *
      * @param fileName
@@ -109,4 +147,9 @@ public class DevUtils {
 //            e.printStackTrace();
 //        }
     }
+
+    public interface InputDialogListener {
+        void inputDone(String resultStr);
+    }
+
 }

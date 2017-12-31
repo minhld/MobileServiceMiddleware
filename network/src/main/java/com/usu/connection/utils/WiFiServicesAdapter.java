@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.usu.connection.R;
-import com.usu.connection.wifi.WiFiDiscoveryManager;
-import com.usu.connection.wifi.WiFiP2pService;
 
 import java.util.List;
 
