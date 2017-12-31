@@ -1,5 +1,5 @@
 
-package com.usu.connection.wfd;
+package com.usu.connection.wifi;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 

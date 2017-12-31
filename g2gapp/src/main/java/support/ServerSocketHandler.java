@@ -28,7 +28,7 @@ public class ServerSocketHandler extends SocketHandler {
     public ServerSocketHandler(Handler handler) throws IOException {
         super(handler);
         chatList = new ArrayList<>();
-        //Utils.connectedDevices = new HashMap<>();
+        //DevUtils.connectedDevices = new HashMap<>();
 
         try {
             socket = new ServerSocket(Utils.SERVER_PORT);
@@ -51,7 +51,7 @@ public class ServerSocketHandler extends SocketHandler {
                 ChatManager chat = new ChatManager(Utils.SocketType.SERVER, socket.accept(), handler);
                 pool.execute(chat);
                 chatList.add(chat);
-                //Utils.connectedDevices.put("", new Utils.XDevice());
+                //DevUtils.connectedDevices.put("", new DevUtils.XDevice());
 
                 writeLog("[server] launching I/O handler");
             } catch (IOException e) {

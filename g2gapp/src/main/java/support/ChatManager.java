@@ -39,7 +39,7 @@ public class ChatManager implements Runnable {
 
             byte[] buffer = new byte[BUFF_LENGTH];
 
-            //handler.obtainMessage(Utils.MESSAGE_INFO, "OK").sendToTarget();
+            //handler.obtainMessage(DevUtils.MESSAGE_INFO, "OK").sendToTarget();
             ByteArrayOutputStream byteStream = null;
 
             int readCount = 0, totalCount = 0;

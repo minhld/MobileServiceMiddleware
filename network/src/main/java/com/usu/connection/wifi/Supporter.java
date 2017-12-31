@@ -1,4 +1,4 @@
-package com.usu.connection.wfd;
+package com.usu.connection.wifi;
 
 import android.app.Activity;
 import android.content.IntentFilter;

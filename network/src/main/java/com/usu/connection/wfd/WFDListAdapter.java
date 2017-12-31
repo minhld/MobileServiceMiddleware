@@ -1,4 +1,8 @@
-package com.usu.connection.utils;
+package com.usu.connection.wfd;
+
+/**
+ * Created by minhld on 01/28/2016
+ */
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -9,29 +13,26 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.usu.connection.R;
-import com.usu.connection.wifi.WiFiDiscoveryManager;
-import com.usu.connection.wifi.WiFiP2pService;
 
 import java.util.List;
 
 /**
- * Created by lee on 9/12/17.
+ * Array adapter for ListFragment that maintains WifiP2pDevice list.
  */
-public class WiFiServicesAdapter extends ArrayAdapter<WiFiP2pService> {
-
+public class WFDListAdapter extends ArrayAdapter<WifiP2pDevice> {
     private Context context;
     private List<WifiP2pDevice> items;
-    private WiFiDiscoveryManager mManager;
+    private WFDManager mWFDManager;
 
     /**
      * @param context
-     * @param mManager
+     * @param textViewResourceId
      */
-    public WiFiServicesAdapter(Context context, WiFiDiscoveryManager mManager) {
-        super(context, R.layout.row_devices);
+    public WFDListAdapter(Context context, int textViewResourceId, WFDManager mWFDManager) {
+        super(context, textViewResourceId);
 
         this.context = context;
-        this.mManager = mManager;
+        this.mWFDManager = mWFDManager;
     }
 
     @Override
@@ -42,18 +43,18 @@ public class WiFiServicesAdapter extends ArrayAdapter<WiFiP2pService> {
                     Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.row_devices, null);
         }
-        WiFiP2pService service = this.getItem(position);
-        if (service != null) {
+        WifiP2pDevice device = this.getItem(position);
+        if (device != null) {
             TextView top = (TextView) v.findViewById(R.id.device_name);
             TextView bottom = (TextView) v.findViewById(R.id.device_details);
             if (top != null) {
-                top.setText(service.name);
+                top.setText(device.deviceName);
             }
             if (bottom != null) {
-                bottom.setText(getDeviceStatus(service.device.status));
+                bottom.setText(getDeviceStatus(device.status));
             }
         }
-        v.setOnClickListener(new DeviceClickListener(service));
+        v.setOnClickListener(new DeviceClickListener(device));
         return v;
     }
 
@@ -62,27 +63,26 @@ public class WiFiServicesAdapter extends ArrayAdapter<WiFiP2pService> {
      * to the device described by this object
      */
     private class DeviceClickListener implements View.OnClickListener {
-        WiFiP2pService service;
+        WifiP2pDevice device;
 
-        public DeviceClickListener(WiFiP2pService service) {
-            this.service = service;
+        public DeviceClickListener(WifiP2pDevice device) {
+            this.device = device;
         }
 
         @Override
         public void onClick(View v) {
-            switch (service.device.status){
+            switch (device.status){
                 case WifiP2pDevice.INVITED: {
                     //mWifiBroadcaster.cancelConnection(device.deviceName, null);
                     break;
                 }
                 case WifiP2pDevice.CONNECTED: {
                     // just disconnect, no confirmation
-                    mManager.disconnectService(service);
+                    mWFDManager.disconnect(device.deviceName, null);
                     break;
                 }
                 case WifiP2pDevice.AVAILABLE: {
-                    // connect to the selected service
-                    mManager.connectToService(service);
+                    mWFDManager.connectToADevice(device, null);
                     break;
                 }
                 case WifiP2pDevice.UNAVAILABLE: {
@@ -90,8 +90,8 @@ public class WiFiServicesAdapter extends ArrayAdapter<WiFiP2pService> {
                     break;
                 }
                 case WifiP2pDevice.FAILED: {
-                    // attempt connecting to the service again
-                    mManager.connectToService(service);
+                    // attempting to connect
+                    mWFDManager.connectToADevice(device, null);
                     break;
                 }
             }

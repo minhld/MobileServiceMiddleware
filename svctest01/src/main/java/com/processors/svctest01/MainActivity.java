@@ -10,9 +10,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.usu.connection.wfd.Supporter;
-
-import com.usu.connection.utils.Utils;
+import com.usu.connection.utils.DevUtils;
+import com.usu.connection.wifi.Supporter;
 
 public class MainActivity extends AppCompatActivity {
     ListView deviceList;
@@ -24,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Utils.MESSAGE_INFO: {
+                case DevUtils.MESSAGE_INFO: {
                     String strMsg = (String) msg.obj;
                     UITools.writeLog(MainActivity.this, infoText, strMsg);
                     break;
