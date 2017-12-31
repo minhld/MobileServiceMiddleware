@@ -1,7 +1,9 @@
 package com.usu.servicemiddleware.processors;
 
+import com.usu.servicemiddleware.annotations.MobileService;
 import com.usu.servicemiddleware.annotations.ServiceMethod;
 import com.usu.servicemiddleware.annotations.SyncMode;
+import com.usu.servicemiddleware.annotations.TransmitType;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,14 +16,13 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
 
-
 /**
  * class to create server and client objects.  
  * 
  * @author minhld
  *
  */
-public class MobileServiceBinCreator {
+public class MobileServiceJSONCreator {
 	static final String REP_STRING = "!@#$%^";
 	static String classInstance;
 	
@@ -33,9 +34,9 @@ public class MobileServiceBinCreator {
 	 */
 	public static void generateServer(ProcessingEnvironment env, TypeElement type) {
 		// get service attributes
-		// MobileService classService = type.getAnnotation(MobileService.class);
+		MobileService classService = type.getAnnotation(MobileService.class);
 		// CommModel commModel = classService.commModel();
-		// TransmitType transType = classService.transmitType();
+		TransmitType transType = classService.transmitType();
 		
 		String fullClassName = type.getQualifiedName().toString();
 		int lastDotIndex = fullClassName.lastIndexOf('.');
@@ -54,8 +55,9 @@ public class MobileServiceBinCreator {
 			// print package and default imports
 			writer.println("package " + packageName + ";");
 			writer.println();
-			writer.println("import com.usu.tinyservice.messages.binary.RequestMessage;");
-			writer.println("import com.usu.tinyservice.messages.binary.ResponseMessage;");
+			writer.println("import com.usu.tinyservice.messages.json.JsonRequestMessage;");
+			writer.println("import com.usu.tinyservice.messages.json.JsonResponseMessage;");
+			writer.println("import com.usu.tinyservice.network.JSONHelper;");
 			writer.println("import com.usu.tinyservice.network.NetUtils;");
 			writer.println("import com.usu.tinyservice.network.Responder;");
 			writer.println();
@@ -82,8 +84,7 @@ public class MobileServiceBinCreator {
 			writer.println("    @Override");
 			writer.println("    public void respond(byte[] req) {");
 			
-			// String serverResponder = printAsyncServerResponder(transType, type, methods);
-			String serverResponder = printAsyncServerResponder(type, methods);
+			String serverResponder = printAsyncServerResponder(transType, type, methods);
 			writer.println(serverResponder);
 			
 			// the last part
@@ -100,15 +101,18 @@ public class MobileServiceBinCreator {
 	/**
 	 * print out the JSON part in the Responder class
 	 * 
+	 * @param transType
 	 * @param e
 	 * @param methods
 	 */
-	// private static String printAsyncServerResponder(TransmitType transType, Element e, List<? extends Element> methods) {
-	private static String printAsyncServerResponder(Element e, List<? extends Element> methods) {
+	private static String printAsyncServerResponder(TransmitType transType, Element e, List<? extends Element> methods) {
 		String serverResponder = "";
 		String reqConvert = "";
-		reqConvert = "      // get request message\n" + 
-				 	 "      RequestMessage reqMsg = (RequestMessage) NetUtils.deserialize(req);\n\n";
+		if (transType == TransmitType.JSON) {
+			reqConvert = "      // get request message from JSON \n" + 
+						 "      String reqJSON = new String(req);\n" +
+						 "      JsonRequestMessage reqMsg = JSONHelper.getRequest(reqJSON);\n\n";
+		}
 		
 		// define the switch - where all the functions are iterated here
 		serverResponder += reqConvert + 
@@ -116,8 +120,7 @@ public class MobileServiceBinCreator {
 
 		// define all the function wrapper
 		for (int i = 0; i < methods.size(); i++) {
-			// serverResponder += printAsyncFunctionHandler(transType, methods.get(i));
-			serverResponder += printAsyncFunctionHandler(methods.get(i));
+			serverResponder += printAsyncFunctionHandler(transType, methods.get(i));
 		}
 		
 		// close the part
@@ -128,10 +131,10 @@ public class MobileServiceBinCreator {
 	/**
 	 * print out one function block in JSON support 
 	 * 
+	 * @param transType
 	 * @param e
 	 */
-	// private static String printAsyncFunctionHandler(TransmitType transType, Element e) {
-	private static String printAsyncFunctionHandler(Element e) {		
+	private static String printAsyncFunctionHandler(TransmitType transType, Element e) {
 		ServiceMethod sm = e.getAnnotation(ServiceMethod.class);
 		
 		// only accept functions having annotation, function and sync_mode is ASYNC
@@ -139,10 +142,12 @@ public class MobileServiceBinCreator {
 		if (sm != null && e instanceof ExecutableElement) {
 			String funcPrepare = printFuncCall(e);
 			
-			String respConvert = "        // convert to binary array\n" +
-						  	  	 "        byte[] respBytes = NetUtils.serialize(respMsg);\n" + 
-						  	  	 "        send(respBytes);\n";
-			
+			String respConvert = "";
+			if (transType == TransmitType.JSON) {
+				respConvert = "        // convert to JSON\n" +
+							  "        String respJSON = JSONHelper.createResponse(respMsg);\n" + 
+							  "        send(respJSON);\n";
+			}
 			funcPrepare = funcPrepare.replace(REP_STRING, respConvert);
 			return funcPrepare;
 		}
@@ -167,8 +172,7 @@ public class MobileServiceBinCreator {
 			funcCall += printInputParam(ves.get(i), i) + "\n";
 		}
 		
-		// String retType = getOnlyName(ee.getReturnType().toString());
-		String retType = ee.getReturnType().toString(); 
+		String retType = getOnlyName(ee.getReturnType().toString());
 		
 		funcCall += "        // start calling function \"" + funcName + "\"\n";
 		funcCall += "        " + ee.getReturnType().toString() + " rets = " + classInstance + "." + funcName + "(";
@@ -176,10 +180,9 @@ public class MobileServiceBinCreator {
 			funcCall += ves.get(i).getSimpleName() + (i < ves.size() - 1 ? ", " : "");
 		}
 		funcCall += ");\n";
-		// funcCall += "        String retType = \"" + retType.replace("[]", "") + "\";\n";
-		funcCall += "        String retType = \"" + retType + "\";\n";
-		// funcCall += "        String[] retValues = NetUtils.getStringArray(rets);\n";
-		funcCall += "        ResponseMessage respMsg = new ResponseMessage(reqMsg.messageId, reqMsg.functionName, retType, rets);\n\n"; 
+		funcCall += "        String retType = \"" + retType.replace("[]", "") + "\";\n";
+		funcCall += "        String[] retValues = NetUtils.getStringArray(rets);\n";
+		funcCall += "        JsonResponseMessage respMsg = new JsonResponseMessage(reqMsg.messageId, reqMsg.functionName, retType, retValues);\n\n"; 
 				
 		funcCall += REP_STRING;
 		funcCall += "        break;\n" +
@@ -204,8 +207,7 @@ public class MobileServiceBinCreator {
 		
 		// define variable types
 		String vFullType = e.asType().toString();
-		// String vType = getOnlyName(vFullType).replace("[]", "");
-		String vType = vFullType.replace("[]", "");
+		String vType = getOnlyName(vFullType).replace("[]", "");
 		
 		// assign value from a parameter to an array
 		inParamsStr += "        // for variable " + "\"" + vName + "\"\n";
@@ -234,9 +236,9 @@ public class MobileServiceBinCreator {
 	 */
 	public static void generateClient(ProcessingEnvironment env, TypeElement type) {
 		// get service attributes
-		// MobileService classService = type.getAnnotation(MobileService.class);
+		MobileService classService = type.getAnnotation(MobileService.class);
 		// CommModel commModel = classService.commModel();
-		// TransmitType transType = classService.transmitType();
+		TransmitType transType = classService.transmitType();
 		
 		String fullClassName = type.getQualifiedName().toString();
 		int lastDotIndex = fullClassName.lastIndexOf('.');
@@ -253,8 +255,9 @@ public class MobileServiceBinCreator {
 			// print package and default imports
 			writer.println("package " + packageName + ";");
 			writer.println();
-			writer.println("import com.usu.tinyservice.messages.binary.InParam;");
-			writer.println("import com.usu.tinyservice.messages.binary.RequestMessage;");
+			writer.println("import com.usu.tinyservice.messages.json.JsonInParam;");
+			writer.println("import com.usu.tinyservice.messages.json.JsonRequestMessage;");
+			writer.println("import com.usu.tinyservice.network.JSONHelper;");
 			writer.println("import com.usu.tinyservice.network.NetUtils;");
 			writer.println("import com.usu.tinyservice.network.ReceiveListener;");
 			writer.println("import com.usu.tinyservice.network.Requester;");
@@ -285,8 +288,7 @@ public class MobileServiceBinCreator {
 			// define all the function wrapper
 			String clientFuncs = "";
 			for (int i = 0; i < methods.size(); i++) {
-				// clientFuncs += printFunctionCaller(transType, methods.get(i)) + "\n";
-				clientFuncs += printFunctionCaller(methods.get(i)) + "\n";
+				clientFuncs += printFunctionCaller(transType, methods.get(i)) + "\n";
 			}
 			writer.println(clientFuncs);
 			
@@ -308,19 +310,18 @@ public class MobileServiceBinCreator {
 	/**
 	 * generate each function declaration for the client 
 	 * 
+	 * @param transType
 	 * @param e
 	 * @return
 	 */
-	// private static String printFunctionCaller(TransmitType transType, Element e) {
-	private static String printFunctionCaller(Element e) {		
+	private static String printFunctionCaller(TransmitType transType, Element e) {
 		ServiceMethod sm = e.getAnnotation(ServiceMethod.class);
 		ExecutableElement ee = (ExecutableElement) e;
 		String funcName = ee.getSimpleName().toString();
 
 		// define the total string of the function caller
 		String funcCaller = "  public ";
-		// String retType = getOnlyName(ee.getReturnType().toString());
-		String retType = ee.getReturnType().toString();
+		String retType = getOnlyName(ee.getReturnType().toString());
 		
 		if (sm == null || !(e instanceof ExecutableElement)) {
 			return "";
@@ -336,28 +337,24 @@ public class MobileServiceBinCreator {
 		// prepare the input parameters
 		List<? extends VariableElement> ves = ee.getParameters();
 		VariableElement ve;
-		String inParamStr = ves.size() > 0 ? "    reqMsg.inParams = new InParam[" + ves.size() + "];\n" : "";
+		String inParamStr = ves.size() > 0 ? "    reqMsg.inParams = new JsonInParam[" + ves.size() + "];\n" : "";
 		
 		String vType, vName;
 		for (int i = 0; i < ves.size(); i++) {
 			ve = ves.get(i);
-			// vType = getOnlyName(ve.asType().toString());
-			vType = ve.asType().toString();
+			vType = getOnlyName(ve.asType().toString());
 			vName = ve.getSimpleName().toString();
 			
-			// funcCaller += getOnlyName(vType + " " + vName + (i < ves.size() - 1 ? ", " : ""));
-			funcCaller += vType + " " + vName + (i < ves.size() - 1 ? ", " : "");
-			
-			// inParamStr += "    String[] param" + (i + 1) + " = NetUtils.getStringArray(" + vName + ");\n" +
-			// inParamStr += "    reqMsg.inParams[" + i + "] = new InParam(\"" + vName + "\", \"" + vType + "\", param" + (i + 1) + ");\n";
-			inParamStr += "    reqMsg.inParams[" + i + "] = new InParam(\"" + vName + "\", \"" + vType + "\", " + vName + ");\n";
+			funcCaller += getOnlyName(vType + " " + vName + (i < ves.size() - 1 ? ", " : ""));
+			inParamStr += "    String[] param" + (i + 1) + " = NetUtils.getStringArray(" + vName + ");\n" +
+						  "    reqMsg.inParams[" + i + "] = new JsonInParam(\"" + vName + "\", \"" + vType + "\", param" + (i + 1) + ");\n";
 		}
 		
 		funcCaller += ") {\n" +
 					  "    // compose input parameters\n" +
 					  "    String functionName = \"" + funcName + "\";\n" + 
 					  "    String outType = \"" + retType + "\";\n" +
-					  "    RequestMessage reqMsg = new RequestMessage(functionName, outType);\n" + 
+					  "    JsonRequestMessage reqMsg = new JsonRequestMessage(functionName, outType);\n" + 
 					  "    \n" +
 					  "    // create request message and send\n";
 		
@@ -365,9 +362,13 @@ public class MobileServiceBinCreator {
 		funcCaller += inParamStr + "\n";
 		
 		// prepare the message to send to server
-		funcCaller += "    // create a binary message\n" +
-			  	  	  "    byte[] reqBytes = NetUtils.serialize(reqMsg);\n" + 
-			  	  	  "    req.send(reqBytes);\n";
+		if (transType == TransmitType.JSON) {
+			funcCaller += "    // create a json message\n" +
+						  "    String msgJSON = JSONHelper.createRequest(reqMsg);\n" +
+					  	  "    req.send(msgJSON);\n";
+		} else {
+			
+		}
 		
 		// enclose part
 		funcCaller += "  }\n";
@@ -385,50 +386,46 @@ public class MobileServiceBinCreator {
 	 * @return
 	 */
 	private static String convertType(String type, String valStr) {
-//		switch (type) {
-//			case "byte": {
-//				return "Byte.parseByte(" + valStr + ")";
-//			}
-//			case "char": {
-//				return valStr + ".charAt[0]";
-//			}
-//			case "short": {
-//				return "Short.parseShort(" + valStr + ")";
-//			}
-//			case "int": {
-//				return "Integer.parseInt(" + valStr + ")";
-//			}
-//			case "long": {
-//				return "Long.parseLong(" + valStr + ")";
-//			}
-//			case "float": {
-//				return "Float.parseFloat(" + valStr + ")";
-//			}
-//			case "double": {
-//				return "Double.parseDouble(" + valStr + ")";
-//			}
-//			case "String": {
-//				return valStr;
-//			}
-//			case "boolean": {
-//				return "Boolean.parseBoolean(" + valStr + ")";
-//			}
-//			default: {
-//				return type;
-//			}
-//		}
-		
-		return "(" + type + ") " + valStr;
+		switch (type) {
+			case "byte": {
+				return "Byte.parseByte(" + valStr + ")";
+			}
+			case "char": {
+				return valStr + ".charAt[0]";
+			}
+			case "short": {
+				return "Short.parseShort(" + valStr + ")";
+			}
+			case "int": {
+				return "Integer.parseInt(" + valStr + ")";
+			}
+			case "long": {
+				return "Long.parseLong(" + valStr + ")";
+			}
+			case "float": {
+				return "Float.parseFloat(" + valStr + ")";
+			}
+			case "double": {
+				return "Double.parseDouble(" + valStr + ")";
+			}
+			case "String": {
+				return valStr;
+			}
+			case "boolean": {
+				return "Boolean.parseBoolean(" + valStr + ")";
+			}
+		}
+		return "";
 	}
 	
-//	/**
-//	 * remove the package name from the full-name 
-//	 * 
-//	 * @param fullName
-//	 * @return
-//	 */
-//	private static String getOnlyName(String fullName) {
-//		int lastDot = fullName.lastIndexOf('.');
-//		return fullName.substring(lastDot + 1);
-//	}
+	/**
+	 * remove the package name from the full-name 
+	 * 
+	 * @param fullName
+	 * @return
+	 */
+	private static String getOnlyName(String fullName) {
+		int lastDot = fullName.lastIndexOf('.');
+		return fullName.substring(lastDot + 1);
+	}
 }

@@ -1,8 +1,5 @@
 package com.usu.servicemiddleware.processors;
 
-import com.usu.servicemiddleware.annotations.ServiceMethod;
-import com.usu.servicemiddleware.annotations.SyncMode;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -14,6 +11,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
 
+import com.usu.servicemiddleware.annotations.ServiceMethod;
+import com.usu.servicemiddleware.annotations.SyncMode;
 
 /**
  * class to create server and client objects.  
@@ -21,7 +20,7 @@ import javax.tools.JavaFileObject;
  * @author minhld
  *
  */
-public class MobileServiceBinCreator {
+public class MobileServiceMultiCreator {
 	static final String REP_STRING = "!@#$%^";
 	static String classInstance;
 	
@@ -31,7 +30,7 @@ public class MobileServiceBinCreator {
 	 * @param env
 	 * @param type
 	 */
-	public static void generateServer(ProcessingEnvironment env, TypeElement type) {
+	public static void generateWorker(ProcessingEnvironment env, TypeElement type) {
 		// get service attributes
 		// MobileService classService = type.getAnnotation(MobileService.class);
 		// CommModel commModel = classService.commModel();
@@ -42,7 +41,7 @@ public class MobileServiceBinCreator {
 		String packageName = fullClassName.substring(0, lastDotIndex);
 		String className = fullClassName.substring(lastDotIndex + 1);
 		
-		String serverClassName = className + "Server";
+		String serverClassName = className + "Worker";
 		
 		// get list of inner methods
 		List<? extends Element> methods = type.getEnclosedElements();
@@ -57,7 +56,7 @@ public class MobileServiceBinCreator {
 			writer.println("import com.usu.tinyservice.messages.binary.RequestMessage;");
 			writer.println("import com.usu.tinyservice.messages.binary.ResponseMessage;");
 			writer.println("import com.usu.tinyservice.network.NetUtils;");
-			writer.println("import com.usu.tinyservice.network.Responder;");
+			writer.println("import com.usu.tinyservice.network.Worker;");
 			writer.println();
 			
 			// declare class prototype 
@@ -66,25 +65,39 @@ public class MobileServiceBinCreator {
 			// declare the original service & network class 
 			classInstance = className.toLowerCase();
 			writer.println("  " + className + " " + classInstance + ";"); 
-			writer.println("  ResponderX resp;");
 			writer.println();
 			
-			// define the server constructor
-			writer.println("  public " + serverClassName + "() {");
+			// define the server constructors
+			writer.println("  public " + serverClassName + "() {\n" + 
+						   "    this(NetUtils.DEFAULT_IP);\n" +
+						   "  }\n");
+			writer.println("  public " + serverClassName + "(String brokerIp) {");
 			writer.println("    " + classInstance + " = new " + className + "();");
-			writer.println("    resp = new ResponderX();");
-			writer.println("    resp.start();");
+			writer.println("    new WorkerX(brokerIp);");
 			writer.println("  }");
 			writer.println();
 			
 			// define the extended Responder
-			writer.println("  class ResponderX extends Responder {");
+			writer.println("  class WorkerX extends Worker {");
+			writer.println("    public WorkerX() {\n" + 
+						   "      super();\n" +
+						   "    }\n\n" +
+						   "    public WorkerX(String brokerIp) {\n" + 
+						   "      super(brokerIp);\n" +
+						   "    }\n\n");
+			
 			writer.println("    @Override");
-			writer.println("    public void respond(byte[] req) {");
+			writer.println("    public byte[] resolveRequest(byte[] packageBytes) {");
 			
 			// String serverResponder = printAsyncServerResponder(transType, type, methods);
 			String serverResponder = printAsyncServerResponder(type, methods);
 			writer.println(serverResponder);
+			writer.println("    }\n");
+			
+			writer.println("    @Override");
+			writer.println("    public String info() {");
+			String infoFunc = printInfoFunc(methods);
+			writer.println(infoFunc);
 			
 			// the last part
 			writer.println("    }");
@@ -107,8 +120,9 @@ public class MobileServiceBinCreator {
 	private static String printAsyncServerResponder(Element e, List<? extends Element> methods) {
 		String serverResponder = "";
 		String reqConvert = "";
-		reqConvert = "      // get request message\n" + 
-				 	 "      RequestMessage reqMsg = (RequestMessage) NetUtils.deserialize(req);\n\n";
+		reqConvert = "      byte[] respBytes = null;\n\n" +
+					 "      // get request message\n" + 
+				 	 "      RequestMessage reqMsg = (RequestMessage) NetUtils.deserialize(packageBytes);\n\n";
 		
 		// define the switch - where all the functions are iterated here
 		serverResponder += reqConvert + 
@@ -116,12 +130,12 @@ public class MobileServiceBinCreator {
 
 		// define all the function wrapper
 		for (int i = 0; i < methods.size(); i++) {
-			// serverResponder += printAsyncFunctionHandler(transType, methods.get(i));
 			serverResponder += printAsyncFunctionHandler(methods.get(i));
 		}
 		
 		// close the part
-		serverResponder += "      }\n";
+		serverResponder += "      }\n\n" + 
+						   "      return respBytes;\n";
 		return serverResponder;
 	}
 	
@@ -140,8 +154,7 @@ public class MobileServiceBinCreator {
 			String funcPrepare = printFuncCall(e);
 			
 			String respConvert = "        // convert to binary array\n" +
-						  	  	 "        byte[] respBytes = NetUtils.serialize(respMsg);\n" + 
-						  	  	 "        send(respBytes);\n";
+						  	  	 "        respBytes = NetUtils.serialize(respMsg);\n";
 			
 			funcPrepare = funcPrepare.replace(REP_STRING, respConvert);
 			return funcPrepare;
@@ -171,7 +184,7 @@ public class MobileServiceBinCreator {
 		String retType = ee.getReturnType().toString(); 
 		
 		funcCall += "        // start calling function \"" + funcName + "\"\n";
-		funcCall += "        " + ee.getReturnType().toString() + " rets = " + classInstance + "." + funcName + "(";
+		funcCall += "        " + retType + " rets = " + classInstance + "." + funcName + "(";
 		for (int i = 0; i < ves.size(); i++) {
 			funcCall += ves.get(i).getSimpleName() + (i < ves.size() - 1 ? ", " : "");
 		}
@@ -225,6 +238,51 @@ public class MobileServiceBinCreator {
 		return inParamsStr;
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param methods
+	 * @return
+	 */
+	private static String printInfoFunc(List<? extends Element> methods) {
+		String infoStr = "      String json =\n" +
+						 "        \"{\" +\n" +
+						 "          \"\\\"code\\\" : \\\"REGISTER\\\",\" +\n" +
+						 "          \"\\\"id\\\" : \\\"\" + workerId + \"\\\",\" +\n" +
+						 "          \"\\\"functions\\\" : [\" +\n";
+		
+		// define all the function wrapper
+		String funcDef, paramsDef;
+		ExecutableElement m;
+		for (int i = 0; i < methods.size(); i++) {
+			if (methods.get(i).getAnnotation(ServiceMethod.class) != null && methods.get(i) instanceof ExecutableElement) {
+				// receive the method names
+				m = (ExecutableElement) methods.get(i);
+				funcDef = 
+						"            \"{\" +\n" +
+						"              \"\\\"functionName\\\" : \\\"" + m.getSimpleName().toString() + "\\\",\" +\n";
+				
+				// prepare input parameters
+				paramsDef = "";
+				for (VariableElement p : m.getParameters()) {
+					paramsDef += "\\\"" + p.asType().toString() + "\\\",";
+				}
+				paramsDef = paramsDef.length() > 0 ? paramsDef.substring(0, paramsDef.length() - 1) : "";
+				
+				// gather and prepare output parameter
+				funcDef +=	
+						"              \"\\\"inParams\\\" : [" + paramsDef + "],\" +\n" +
+						"              \"\\\"outParam\\\" : \\\"" + m.getReturnType().toString() + "\\\"\" +\n" +
+						"            \"}" + (i < methods.size() - 1 ? "," : "") + "\" +\n";
+				infoStr += funcDef;
+			}
+		}
+		
+		infoStr	+= "          \"]\" +\n" +
+				   "        \"}\";\n" +
+				   "      return json;";
+		return infoStr;
+	}
 	
 	/**
 	 * generator of the client
@@ -257,7 +315,7 @@ public class MobileServiceBinCreator {
 			writer.println("import com.usu.tinyservice.messages.binary.RequestMessage;");
 			writer.println("import com.usu.tinyservice.network.NetUtils;");
 			writer.println("import com.usu.tinyservice.network.ReceiveListener;");
-			writer.println("import com.usu.tinyservice.network.Requester;");
+			writer.println("import com.usu.tinyservice.network.Client;");
 			writer.println();
 			
 			// declare class prototype 
@@ -265,8 +323,8 @@ public class MobileServiceBinCreator {
 			
 			// declare the original service & network class 
 			classInstance = className.toLowerCase();
-			writer.println("  public ReceiveListener listener;"); 
-			writer.println("  private RequesterX req;");
+			writer.println("  ReceiveListener listener;"); 
+			writer.println("  RmiClient client;");
 			writer.println();
 			
 			// define the server constructor
@@ -274,10 +332,9 @@ public class MobileServiceBinCreator {
 			writer.println("    // start listener");
 			writer.println("    this.listener = listener;\n");
 			writer.println("    // create request message and send");
-			writer.println("    req = new RequesterX();");
-			writer.println("    req.start();");
+			writer.println("    client = new RmiClient();");
 			writer.println("  }");
-			writer.println();
+			// writer.println();
 			
 			// define the client function stubs
 			// get list of inner methods
@@ -291,10 +348,10 @@ public class MobileServiceBinCreator {
 			writer.println(clientFuncs);
 			
 			// the last part
-			writer.println("  class RequesterX extends Requester {\n" + 
+			writer.println("  class RmiClient extends Client {\n" + 
 						   "	@Override\n" + 
-						   "	public void receive(byte[] resp) {\n" + 
-						   "	  listener.dataReceived(resp);\n" + 
+						   "	public void receive(String idChain, String funcName, byte[] resp) {\n" + 
+						   "	  listener.dataReceived(idChain, funcName, resp);\n" + 
 						   "	}\n" + 
 						   "  }");
 			writer.println("}");
@@ -367,7 +424,7 @@ public class MobileServiceBinCreator {
 		// prepare the message to send to server
 		funcCaller += "    // create a binary message\n" +
 			  	  	  "    byte[] reqBytes = NetUtils.serialize(reqMsg);\n" + 
-			  	  	  "    req.send(reqBytes);\n";
+			  	  	  "    client.send(functionName, reqBytes);\n";
 		
 		// enclose part
 		funcCaller += "  }\n";
