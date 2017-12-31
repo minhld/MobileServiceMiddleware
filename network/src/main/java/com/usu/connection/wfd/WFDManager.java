@@ -135,7 +135,7 @@ public class WFDManager extends BroadcastReceiver {
         mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group) {
-                writeLog("[g-info]: " + (group.isGroupOwner() ? "owner" : "p2p-clt") + "; " +
+                writeLog("[g-info]: " + (group.isGroupOwner() ? "owner" : "wfd-clt") + "; " +
                         "name: " + group.getNetworkName() + "; " +
                         "pwd: " + group.getPassphrase());
             }
@@ -179,7 +179,7 @@ public class WFDManager extends BroadcastReceiver {
         });
     }
 
-    public void connectToADevice(final WifiP2pDevice device, final WifiP2pConnectionListener listener) {
+    public void connectToADevice(final WifiP2pDevice device, final WFDConnectionListener listener) {
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
@@ -216,7 +216,7 @@ public class WFDManager extends BroadcastReceiver {
      * @param deviceName
      * @param listener
      */
-    public void disconnect(final String deviceName, final WifiP2pConnectionListener listener){
+    public void disconnect(final String deviceName, final WFDConnectionListener listener){
 //        // close the current socket
 //        mSocketHandler.dispose();
 
@@ -318,33 +318,6 @@ public class WFDManager extends BroadcastReceiver {
          */
         public void wfdEstablished(WifiP2pInfo p2pInfo);
     }
-
-//    public void writeString(String msg) {
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        byte[] data = ("[" + deviceName + "] " + msg).getBytes();
-//        byte[] lengthBytes = DevUtils.intToBytes(data.length);
-//        bos.write(lengthBytes, 0, lengthBytes.length);
-//        bos.write(data, 0, data.length);
-//        sendObject(bos.toByteArray());
-//    }
-
-//    /**
-//     * this function will send an object through socket to the server
-//     *
-//     * @param st should be a serializable object
-//     */
-//    public void sendObject(Object st) {
-//        if (st instanceof byte[]) {
-//            mSocketHandler.write((byte[])st);
-//        }else {
-//            try {
-//                // we need to serialize it to binary array before dispatching it
-//                mSocketHandler.write(DevUtils.serialize(st));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
     public void writeLog(final String msg){
         mHandler.obtainMessage(DevUtils.MESSAGE_INFO, msg).sendToTarget();

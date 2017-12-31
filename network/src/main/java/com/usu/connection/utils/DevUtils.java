@@ -90,25 +90,23 @@ public class DevUtils {
     public static void appendTestInfo(String fileName, String test, long... values) {
         return;
 
-        /*
-        try {
-            File downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            String testResultPath = downloadFolder.getAbsolutePath() + "/" + fileName + ".txt";
-            FileWriter writer = new FileWriter(testResultPath, true);
-            if (values.length == 0) {
-                writer.write(test + " " + new Date().getTime() + "\n");
-            } else {
-                writer.write(test);
-                for (int i = 0; i < values.length; i++) {
-                    writer.write(" " + values[i]);
-                }
-                writer.write("\n");
-            }
-
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
+//        try {
+//            File downloadFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+//            String testResultPath = downloadFolder.getAbsolutePath() + "/" + fileName + ".txt";
+//            FileWriter writer = new FileWriter(testResultPath, true);
+//            if (values.length == 0) {
+//                writer.write(test + " " + new Date().getTime() + "\n");
+//            } else {
+//                writer.write(test);
+//                for (int i = 0; i < values.length; i++) {
+//                    writer.write(" " + values[i]);
+//                }
+//                writer.write("\n");
+//            }
+//
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

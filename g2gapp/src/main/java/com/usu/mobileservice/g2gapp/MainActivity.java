@@ -19,6 +19,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.usu.connection.utils.DevUtils;
+import com.usu.connection.wfd.WFDSupporter;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -32,11 +35,6 @@ import g2glib.WifiPeerListAdapter;
 import support.Utils;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
     @BindView(R.id.createGroupBtn)
     Button createGroupBtn;
@@ -68,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.infoText)
     TextView infoText;
 
-    WifiBroader wifiBroader;
-    WifiConnector orgWifiBroader;
-    IntentFilter mIntentFilter;
+    WFDSupporter wfdSupporter;
+
+//    WifiBroader wifiBroader;
+//    WifiConnector orgWifiBroader;
+//    IntentFilter mIntentFilter;
 
     WifiPeerListAdapter deviceListAdapter;
     WifiNetworkListAdapter networkListAdapter;
@@ -110,69 +110,76 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         infoText.setMovementMethod(new ScrollingMovementMethod());
 
-        // ------ Prepare for WiFi Direct ------
-        wifiBroader = new WifiBroader(this, infoText);
-        wifiBroader.setSocketHandler(mainUiHandler);
-        wifiBroader.setBroadCastListener(new WifiBroader.BroadCastListener() {
-            @Override
-            public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
-                deviceListAdapter.clear();
-                deviceListAdapter.addAll(deviceList);
-                deviceListAdapter.notifyDataSetChanged();
-            }
+        // WiFi-Direct
+        wfdSupporter = new WFDSupporter(this, mainUiHandler);
+        deviceList.setAdapter(wfdSupporter.getDeviceListAdapter());
 
-            @Override
-            public void socketUpdated(Utils.SocketType socketType, boolean connected) {
 
-            }
-        });
-        mIntentFilter = wifiBroader.getSingleIntentFilter();
 
-        // device list
-        deviceListAdapter = new WifiPeerListAdapter(this, R.layout.row_devices, wifiBroader);
-        deviceList.setAdapter(deviceListAdapter);
+//        // ------ Prepare for WiFi Direct ------
+//        wifiBroader = new WifiBroader(this, infoText);
+//        wifiBroader.setSocketHandler(mainUiHandler);
+//        wifiBroader.setBroadCastListener(new WifiBroader.BroadCastListener() {
+//            @Override
+//            public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
+//                deviceListAdapter.clear();
+//                deviceListAdapter.addAll(deviceList);
+//                deviceListAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void socketUpdated(Utils.SocketType socketType, boolean connected) {
+//
+//            }
+//        });
+//        mIntentFilter = wifiBroader.getSingleIntentFilter();
+//
+//        // device list
+//        deviceListAdapter = new WifiPeerListAdapter(this, R.layout.row_devices, wifiBroader);
+//        deviceList.setAdapter(deviceListAdapter);
 
-        // ------ Prepared for Original WiFi ------
-        orgWifiBroader = new WifiConnector(this, infoText);
-        orgWifiBroader.setSocketHandler(mainUiHandler);
-        orgWifiBroader.setmWifiScanListener(new WifiConnector.WiFiScanListener() {
-            @Override
-            public void listReceived(List<ScanResult> mScanResults) {
-                networkListAdapter.clear();
-                networkListAdapter.addAll(mScanResults);
-                networkListAdapter.notifyDataSetChanged();
-            }
-        });
-
-        // WiFi network list
-        networkListAdapter = new WifiNetworkListAdapter(this, R.layout.row_wifi, orgWifiBroader);
-        wifiList.setAdapter(networkListAdapter);
+//        // ------ Prepared for Original WiFi ------
+//        orgWifiBroader = new WifiConnector(this, infoText);
+//        orgWifiBroader.setSocketHandler(mainUiHandler);
+//        orgWifiBroader.setmWifiScanListener(new WifiConnector.WiFiScanListener() {
+//            @Override
+//            public void listReceived(List<ScanResult> mScanResults) {
+//                networkListAdapter.clear();
+//                networkListAdapter.addAll(mScanResults);
+//                networkListAdapter.notifyDataSetChanged();
+//            }
+//        });
+//
+//        // WiFi network list
+//        networkListAdapter = new WifiNetworkListAdapter(this, R.layout.row_wifi, orgWifiBroader);
+//        wifiList.setAdapter(networkListAdapter);
 
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wifiBroader.createGroup();
+                wfdSupporter.createGroup();
             }
         });
 
         discoverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wifiBroader.discoverPeers();
+                wfdSupporter.discoverPeers();
             }
         });
 
         getDirectInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wifiBroader.requestGroupInfo();
+                wfdSupporter.requestGroupInfo();
             }
         });
 
         sendWifiDirectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wifiBroader.writeString("sent a ACK :)");
+                // wifiBroader.writeString("sent a ACK :)");
+                // send data
             }
         });
 
@@ -181,10 +188,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                         checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    orgWifiBroader.requestPermission(MainActivity.this);
+                    // orgWifiBroader.requestPermission(MainActivity.this);
                 } else {
                     // search for Wifi network list
-                    orgWifiBroader.getWifiConnections();
+                    // orgWifiBroader.getWifiConnections();
                 }
             }
         });
@@ -201,40 +208,29 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // connect to one of the Wifi networks
                 // wifiBroader.requestGroupInfo();
-                orgWifiBroader.writeString("sent a WiFi ACK :)");
+                // orgWifiBroader.writeString("sent a WiFi ACK :)");
             }
         });
 
-        grandWritePermission(this);
+        // grant permission - for Android 6.0 and higher
+        DevUtils.grandWritePermission(this);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        orgWifiBroader.getWifiConnections();
+        // orgWifiBroader.getWifiConnections();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        this.unregisterReceiver(wifiBroader);
+        wfdSupporter.runOnPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.registerReceiver(wifiBroader, mIntentFilter);
-    }
-
-    public static void grandWritePermission(Activity activity) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            int permission = ActivityCompat.checkSelfPermission(activity,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                // We don't have permission so prompt the user
-                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-            }
-        }
+        wfdSupporter.runOnResume();
     }
 
 }
