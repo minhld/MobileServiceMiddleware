@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MobileServiceMiddleware.iml" filepath="$PROJECT_DIR$/MobileServiceMiddleware.iml" />
-      <module fileurl="file://$PROJECT_DIR$/annotationchecker/annotationchecker.iml" filepath="$PROJECT_DIR$/annotationchecker/annotationchecker.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotations/annotations.iml" filepath="$PROJECT_DIR$/annotations/annotations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/g2gapp/annotationchecker.iml" filepath="$PROJECT_DIR$/g2gapp/annotationchecker.iml" />
       <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
       <module fileurl="file://$PROJECT_DIR$/observer/observer.iml" filepath="$PROJECT_DIR$/observer/observer.iml" />
       <module fileurl="file://$PROJECT_DIR$/processors/processors.iml" filepath="$PROJECT_DIR$/processors/processors.iml" />

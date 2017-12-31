@@ -8,8 +8,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/annotationchecker" />
             <option value="$PROJECT_DIR$/annotations" />
+            <option value="$PROJECT_DIR$/g2gapp" />
             <option value="$PROJECT_DIR$/network" />
             <option value="$PROJECT_DIR$/observer" />
             <option value="$PROJECT_DIR$/processors" />

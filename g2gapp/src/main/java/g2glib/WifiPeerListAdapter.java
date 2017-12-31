@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.usu.mobileservice.annotationchecker.R;
+import com.usu.mobileservice.g2gapp.R;
 
 import java.util.List;
 

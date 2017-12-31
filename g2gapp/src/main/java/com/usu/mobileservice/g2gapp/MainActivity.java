@@ -1,4 +1,4 @@
-package com.usu.mobileservice.annotationchecker;
+package com.usu.mobileservice.g2gapp;
 
 import android.Manifest;
 import android.app.Activity;

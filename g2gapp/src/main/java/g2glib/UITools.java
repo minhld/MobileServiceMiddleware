@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.usu.mobileservice.annotationchecker.R;
+import com.usu.mobileservice.g2gapp.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

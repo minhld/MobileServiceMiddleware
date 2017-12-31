@@ -1,1 +1,1 @@
-include ':servicemiddleware', ':network', ':svctest01', ':annotationchecker', ':processors', ':annotations', ':observer'
+include ':servicemiddleware', ':network', ':svctest01', ':g2gapp', ':processors', ':annotations', ':observer'

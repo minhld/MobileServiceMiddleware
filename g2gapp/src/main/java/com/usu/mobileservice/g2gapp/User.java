@@ -1,4 +1,4 @@
-package com.usu.mobileservice.annotationchecker;
+package com.usu.mobileservice.g2gapp;
 
 import com.usu.servicemiddleware.annotations.CommModel;
 import com.usu.servicemiddleware.annotations.MobileService;
