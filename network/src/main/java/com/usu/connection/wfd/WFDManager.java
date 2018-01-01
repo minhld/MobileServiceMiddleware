@@ -35,13 +35,10 @@ public class WFDManager extends BroadcastReceiver {
     // TEST:
     String connectedDeviceName = "";
 
-    public void setWFDListener(Handler skHandler) {
-        this.mHandler = skHandler;
-    }
-
-    public WFDManager(Activity c){
-        this.mManager = (WifiP2pManager)c.getSystemService(Context.WIFI_P2P_SERVICE);
+    public WFDManager(Activity c, Handler mHandler){
+        this.mManager = (WifiP2pManager) c.getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(c, c.getMainLooper(), null);
+        this.mHandler = mHandler;
     }
 
     @Override

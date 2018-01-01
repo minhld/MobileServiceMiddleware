@@ -25,8 +25,7 @@ public class WFDSupporter {
     public WFDSupporter(Activity context, final Handler mainHandler) {
         this.context = context;
 
-        wfdManager = new WFDManager(this.context);
-        wfdManager.setWFDListener(mainHandler);
+        wfdManager = new WFDManager(this.context, mainHandler);
         wfdManager.setBroadCastListener(new WFDManager.BroadCastListener() {
             @Override
             public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {

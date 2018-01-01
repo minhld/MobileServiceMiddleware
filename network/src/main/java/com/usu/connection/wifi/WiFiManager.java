@@ -13,19 +13,14 @@ import android.net.wifi.WifiInfo;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.text.format.Formatter;
-import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Date;
+import com.usu.connection.utils.DevUtils;
+
 import java.util.List;
 
 /**
  * Created by minhld on 7/26/2016.
  */
-
 public class WiFiManager {
     public static final String SERVER_IP = "144.39.162.153"; //"144.39.248.223"; //"144.39.215.135"; //"144.39.254.119";// "192.168.49.1";
     public static final String PASSWORD = "DIWNZzzv"; // "qVK5TkO9"; // "NbNCLPiX"; // "EWat5Nhr";
@@ -33,26 +28,22 @@ public class WiFiManager {
     android.net.wifi.WifiManager mWifiManager;
     WiFiScanListener scanListener;
 
-    // SocketHandler mSocketHandler;
-    Handler mSocketUIListener;
-
+    Handler mHandler;
     String deviceName;
-    TextView logText;
 
-    public void setSocketHandler(Handler skHandler) {
-        this.mSocketUIListener = skHandler;
-    }
+//    public void setmWifiScanListener(WiFiScanListener scanListener) {
+//        this.scanListener = scanListener;
+//    }
 
-    public void setmWifiScanListener(WiFiScanListener scanListener) {
-        this.scanListener = scanListener;
-    }
-
-    public WiFiManager(Activity c, TextView logText) {
-        this.logText = logText;
-        mWifiManager = (android.net.wifi.WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+    public WiFiManager(Activity c, Handler mHandler) {
+//        this.logText = logText;
+        mWifiManager = (android.net.wifi.WifiManager) c.getApplicationContext().
+                                    getSystemService(Context.WIFI_SERVICE);
         IntentFilter filters = new IntentFilter(android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         filters.addAction(android.net.wifi.WifiManager.SUPPLICANT_STATE_CHANGED_ACTION);
         c.registerReceiver(mWifiScanReceiver, filters);
+
+        this.mHandler = mHandler;
     }
 
     /**
@@ -76,7 +67,8 @@ public class WiFiManager {
                 SupplicantState state = intent.getParcelableExtra(android.net.wifi.WifiManager.EXTRA_NEW_STATE);
                 if (SupplicantState.isValidState(state) && state == SupplicantState.COMPLETED) {
                     // when a wifi connection is established
-                    boolean connected = checkConnectedToDesiredWifi(c);
+                    // boolean connected = checkConnectedToDesiredWifi(c);
+                    checkConnectedToDesiredWifi(c);
                 }
             }
         }
@@ -84,8 +76,7 @@ public class WiFiManager {
 
     public void requestPermission(Activity activity) {
         ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.ACCESS_COARSE_LOCATION },
-                0);
+                new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, 0);
     }
 
     public void getWifiConnections() {
@@ -131,7 +122,11 @@ public class WiFiManager {
         return configuration;
     }
 
-    //To tell OS to give preference to this network
+    /**
+     * to tell OS to give preference to this network
+     *
+     * @param config
+     */
     private void assignHighestPriority(WifiConfiguration config) {
         List<WifiConfiguration> configuredNetworks = mWifiManager.getConfiguredNetworks();
         if (configuredNetworks != null) {
@@ -167,12 +162,14 @@ public class WiFiManager {
         return -1;
     }
 
-
-    /** Detect you are connected to a specific network. */
-    private boolean checkConnectedToDesiredWifi(Context c) {
-        boolean connected = false;
-
-        android.net.wifi.WifiManager wifiManager = (android.net.wifi.WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+    /**
+     * detect you are connected to a specific network.
+     *
+     * @param c
+     */
+    private void checkConnectedToDesiredWifi(Context c) {
+        android.net.wifi.WifiManager wifiManager = (android.net.wifi.WifiManager)
+                                    c.getSystemService(Context.WIFI_SERVICE);
 
         WifiInfo wifi = wifiManager.getConnectionInfo();
         if (wifi != null) {
@@ -183,52 +180,17 @@ public class WiFiManager {
                     "freq: " + wifi.getFrequency() + "MHz; " +
                     "speed: " + wifi.getLinkSpeed() + "Mbps; ");
         }
-
-        // create client socket
-        try {
-            mSocketHandler = new ClientSocketHandler(mSocketUIListener, InetAddress.getByName(SERVER_IP));
-            mSocketHandler.start();
-        } catch (UnknownHostException uhEx) {
-            writeLog("exception: " + uhEx.getMessage());
-            uhEx.printStackTrace();
-        }
-
-        return connected;
-    }
-
-    public interface WiFiScanListener {
-        public void listReceived(List<ScanResult> mScanResults);
-    }
-
-    public void writeLog(final String msg){
-        String outMsg = Utils.SDF.format(new Date()) + ": " + msg + "\n";
-        logText.append(outMsg);
-    }
-
-    public void writeString(String msg) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] data = ("[" + deviceName + "] " + msg).getBytes();
-        byte[] lengthBytes = Utils.intToBytes(data.length);
-        bos.write(lengthBytes, 0, lengthBytes.length);
-        bos.write(data, 0, data.length);
-        sendObject(bos.toByteArray());
     }
 
     /**
-     * this function will send an object through socket to the server
      *
-     * @param st should be a serializable object
      */
-    public void sendObject(Object st) {
-        if (st instanceof byte[]) {
-            mSocketHandler.write((byte[])st);
-        }else {
-            try {
-                // we need to serialize it to binary array before dispatching it
-                mSocketHandler.write(Utils.serialize(st));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public interface WiFiScanListener {
+        void listReceived(List<ScanResult> mScanResults);
     }
+
+    public void writeLog(final String msg){
+        mHandler.obtainMessage(DevUtils.MESSAGE_INFO, msg).sendToTarget();
+    }
+
 }
