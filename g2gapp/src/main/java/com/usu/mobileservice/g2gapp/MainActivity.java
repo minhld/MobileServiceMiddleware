@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import com.usu.connection.utils.DevUtils;
 import com.usu.connection.wfd.WFDSupporter;
+import com.usu.connection.wifi.WiFiManager;
+import com.usu.connection.wifi.WiFiSupporter;
 
 import java.util.Collection;
 import java.util.List;
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     TextView infoText;
 
     WFDSupporter wfdSupporter;
+    WiFiSupporter wfSupport;
 
 //    WifiBroader wifiBroader;
 //    WiFiManager orgWifiBroader;
@@ -115,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
         deviceList.setAdapter(wfdSupporter.getDeviceListAdapter());
 
         // Original WiFi Interface
-
+        wfSupport = new WiFiSupporter(this, mainUiHandler);
+        wifiList.setAdapter(wfSupport.getDeviceListAdapter());
 
 
 //        // ------ Prepare for WiFi Direct ------
