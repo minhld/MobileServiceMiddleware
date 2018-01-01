@@ -181,10 +181,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                         checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // orgWifiBroader.requestPermission(MainActivity.this);
+                    wfSupport.requestPermission(MainActivity.this);
                 } else {
                     // search for Wifi network list
                     // orgWifiBroader.getWifiConnections();
+                    wfSupport.getWifiConnections();
                 }
             }
         });

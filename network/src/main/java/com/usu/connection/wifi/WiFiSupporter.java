@@ -2,15 +2,12 @@ package com.usu.connection.wifi;
 
 import android.app.Activity;
 import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pInfo;
+import android.net.wifi.ScanResult;
 import android.os.Handler;
 
 import com.usu.connection.R;
-import com.usu.connection.wfd.WFDListAdapter;
-import com.usu.connection.wfd.WFDManager;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * This class utilizes the pub-sub library to provide full functionality of
@@ -20,88 +17,48 @@ import java.util.Collection;
  */
 public class WiFiSupporter {
     Activity context;
-    WFDManager wfdManager;
-    IntentFilter mIntentFilter;
-    WFDListAdapter wifiListAdapter;
+    WiFiManager wiFiManager;
+    WiFiListAdapter wifiListAdapter;
 
     public WiFiSupporter(Activity context, final Handler mainHandler) {
         this.context = context;
 
-        wfdManager = new WFDManager(this.context, mainHandler);
-        wfdManager.setBroadCastListener(new WFDManager.BroadCastListener() {
+        wiFiManager = new WiFiManager(context, mainHandler);
+        wiFiManager.setmWifiScanListener(new WiFiManager.WiFiScanListener() {
             @Override
-            public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
+            public void listReceived(List<ScanResult> mScanResults) {
                 wifiListAdapter.clear();
-                wifiListAdapter.addAll(deviceList);
+                wifiListAdapter.addAll(mScanResults);
                 wifiListAdapter.notifyDataSetChanged();
             }
-
-            @Override
-            public void wfdEstablished(WifiP2pInfo p2pInfo) {
-                if (p2pInfo.groupOwnerAddress == null) {
-                    return;
-                }
-
-                String brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
-                if (p2pInfo.groupFormed && p2pInfo.isGroupOwner) {
-                    // when device becomes an Owner
-                    // a Broker should be placed on the Owner
-                } else if (p2pInfo.groupFormed) {
-                    // when device becomes a Client
-                    // a Client or Worker should be placed on the Client
-                }
-            }
         });
-        mIntentFilter = wfdManager.getSingleIntentFilter();
-        wifiListAdapter = new WFDListAdapter(this.context, R.layout.row_devices, wfdManager);
-    }
 
-    /**
-     * discover the peers in the WiFi peer-to-peer mobile network
-     */
-    public void discoverPeers() {
-        // start discovering
-        wfdManager.discoverPeers();
-        mIntentFilter = wfdManager.getSingleIntentFilter();
-    }
+        // WiFi network list
+        wifiListAdapter = new WiFiListAdapter(context, R.layout.row_wifi, wiFiManager);
 
-    /**
-     * create itself to be a group owner to handle a private group
-     */
-    public void createGroup() {
-        wfdManager.createGroup();
-    }
-
-    /**
-     *
-     */
-    public void requestGroupInfo() {
-        wfdManager.requestGroupInfo();
     }
 
     /**
      * return the peer list adapter (for UI usage)
      * @return
      */
-    public WFDListAdapter getWifiListAdapter() {
+    public WiFiListAdapter getWifiListAdapter() {
         return wifiListAdapter;
     }
 
     /**
-     * this should be added at the end of onPause on main activity
+     * request permission for an activity
+     * @param c
      */
-    public void runOnPause() {
-        if (wfdManager != null && mIntentFilter != null) {
-            this.context.unregisterReceiver(wfdManager);
-        }
+    public void requestPermission(Activity c) {
+        wiFiManager.requestPermission(c);
     }
 
     /**
-     * this should be added at the end of onResume on main activity
+     * scan the list of wifi routers
      */
-    public void runOnResume() {
-        if (wfdManager != null && mIntentFilter != null) {
-            this.context.registerReceiver(wfdManager, mIntentFilter);
-        }
+    public void getWifiConnections() {
+        wiFiManager.getWifiConnections();
     }
+
 }

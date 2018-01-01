@@ -31,12 +31,11 @@ public class WiFiManager {
     Handler mHandler;
     String deviceName;
 
-//    public void setmWifiScanListener(WiFiScanListener scanListener) {
-//        this.scanListener = scanListener;
-//    }
+    public void setmWifiScanListener(WiFiScanListener scanListener) {
+        this.scanListener = scanListener;
+    }
 
     public WiFiManager(Activity c, Handler mHandler) {
-//        this.logText = logText;
         mWifiManager = (android.net.wifi.WifiManager) c.getApplicationContext().
                                     getSystemService(Context.WIFI_SERVICE);
         IntentFilter filters = new IntentFilter(android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
