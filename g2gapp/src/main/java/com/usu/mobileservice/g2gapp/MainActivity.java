@@ -1,16 +1,11 @@
 package com.usu.mobileservice.g2gapp;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.wifi.ScanResult;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -21,19 +16,11 @@ import android.widget.TextView;
 
 import com.usu.connection.utils.DevUtils;
 import com.usu.connection.wfd.WFDSupporter;
-import com.usu.connection.wifi.WiFiManager;
 import com.usu.connection.wifi.WiFiSupporter;
-
-import java.util.Collection;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import g2glib.UITools;
-import g2glib.WifiBroader;
-import g2glib.WifiConnector;
-import g2glib.WifiNetworkListAdapter;
-import g2glib.WifiPeerListAdapter;
 import support.Utils;
 
 public class MainActivity extends AppCompatActivity {
@@ -119,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Original WiFi Interface
         wfSupport = new WiFiSupporter(this, mainUiHandler);
-        wifiList.setAdapter(wfSupport.getDeviceListAdapter());
+        wifiList.setAdapter(wfSupport.getWifiListAdapter());
 
 
 //        // ------ Prepare for WiFi Direct ------

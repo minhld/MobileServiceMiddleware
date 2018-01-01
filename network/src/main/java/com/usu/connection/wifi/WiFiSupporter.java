@@ -22,7 +22,7 @@ public class WiFiSupporter {
     Activity context;
     WFDManager wfdManager;
     IntentFilter mIntentFilter;
-    WFDListAdapter deviceListAdapter;
+    WFDListAdapter wifiListAdapter;
 
     public WiFiSupporter(Activity context, final Handler mainHandler) {
         this.context = context;
@@ -31,9 +31,9 @@ public class WiFiSupporter {
         wfdManager.setBroadCastListener(new WFDManager.BroadCastListener() {
             @Override
             public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
-                deviceListAdapter.clear();
-                deviceListAdapter.addAll(deviceList);
-                deviceListAdapter.notifyDataSetChanged();
+                wifiListAdapter.clear();
+                wifiListAdapter.addAll(deviceList);
+                wifiListAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -53,7 +53,7 @@ public class WiFiSupporter {
             }
         });
         mIntentFilter = wfdManager.getSingleIntentFilter();
-        deviceListAdapter = new WFDListAdapter(this.context, R.layout.row_devices, wfdManager);
+        wifiListAdapter = new WFDListAdapter(this.context, R.layout.row_devices, wfdManager);
     }
 
     /**
@@ -83,8 +83,8 @@ public class WiFiSupporter {
      * return the peer list adapter (for UI usage)
      * @return
      */
-    public WFDListAdapter getDeviceListAdapter() {
-        return deviceListAdapter;
+    public WFDListAdapter getWifiListAdapter() {
+        return wifiListAdapter;
     }
 
     /**
