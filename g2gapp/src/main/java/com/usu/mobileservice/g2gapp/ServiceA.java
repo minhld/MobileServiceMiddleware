@@ -15,7 +15,7 @@ import java.io.File;
         version = "1.1",
         commModel = CommModel.ClientServer,
         transmitType = TransmitType.Binary)
-public class User {
+public class ServiceA {
 
     @ServiceMethod(
             syncMode = SyncMode.Async,

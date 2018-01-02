@@ -20,8 +20,6 @@ import com.usu.connection.wifi.WiFiSupporter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import g2glib.UITools;
-import support.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,20 +67,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Utils.MESSAGE_READ_SERVER: {
-                    String strMsg = msg.obj.toString();
-                    UITools.writeLog(MainActivity.this, infoText, strMsg);
-                    break;
-                }
-                case Utils.MESSAGE_READ_CLIENT: {
-                    String strMsg = msg.obj.toString();
-                    UITools.writeLog(MainActivity.this, infoText, strMsg);
-                    break;
-                }
-                case Utils.MAIN_JOB_DONE: {
-
-                    break;
-                }
+//                case Utils.MESSAGE_READ_SERVER: {
+//                    String strMsg = msg.obj.toString();
+//                    UITools.writeLog(MainActivity.this, infoText, strMsg);
+//                    break;
+//                }
+//                case Utils.MESSAGE_READ_CLIENT: {
+//                    String strMsg = msg.obj.toString();
+//                    UITools.writeLog(MainActivity.this, infoText, strMsg);
+//                    break;
+//                }
+//                case Utils.MAIN_JOB_DONE: {
+//
+//                    break;
+//                }
                 case DevUtils.MESSAGE_INFO: {
                     String strMsg = (String) msg.obj;
                     UITools.writeLog(MainActivity.this, infoText, strMsg);
