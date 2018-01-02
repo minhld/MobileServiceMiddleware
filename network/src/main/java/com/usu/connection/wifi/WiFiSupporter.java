@@ -1,7 +1,6 @@
 package com.usu.connection.wifi;
 
 import android.app.Activity;
-import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.os.Handler;
 

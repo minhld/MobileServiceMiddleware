@@ -132,7 +132,13 @@ public class WFDManager extends BroadcastReceiver {
         mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group) {
+                if (group == null) {
+                    writeLog("group is empty");
+                    return;
+                }
+
                 writeLog("[g-info]: " + (group.isGroupOwner() ? "owner" : "wfd-clt") + "; " +
+                        "IP: " + group.getInterface() + "; " +
                         "name: " + group.getNetworkName() + "; " +
                         "pwd: " + group.getPassphrase());
             }
