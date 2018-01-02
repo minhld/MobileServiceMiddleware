@@ -12,9 +12,9 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.os.Handler;
 
 import com.usu.connection.utils.DevUtils;
+import com.usu.tinyservice.network.NetUtils;
 
 import java.util.Collection;
 
@@ -29,16 +29,14 @@ public class WFDManager extends BroadcastReceiver {
     WifiP2pManager.Channel mChannel;
     IntentFilter mIntentFilter;
 
-    Handler mHandler;
     BroadCastListener broadCastListener;
 
     // TEST:
     String connectedDeviceName = "";
 
-    public WFDManager(Activity c, Handler mHandler){
+    public WFDManager(Activity c){
         this.mManager = (WifiP2pManager) c.getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(c, c.getMainLooper(), null);
-        this.mHandler = mHandler;
     }
 
     @Override
@@ -77,17 +75,6 @@ public class WFDManager extends BroadcastReceiver {
                     if (broadCastListener != null) {
                         broadCastListener.wfdEstablished(info);
                     }
-//                    if (info.groupFormed && info.isGroupOwner) {
-//                        // if it is a group owner, it will become a broker
-//                        String brokerIp = info.groupOwnerAddress.getHostAddress();
-//                        new Broker(brokerIp, mWFDListener).execute();
-//                        writeLog("broker started");
-//                    } else if (info.groupFormed) {
-//                        String brokerIp = info.groupOwnerAddress.getHostAddress();
-//                        new Publisher(brokerIp, mWFDListener).execute();
-//                    } else {
-//
-//                    }
                 }
             });
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
@@ -323,6 +310,7 @@ public class WFDManager extends BroadcastReceiver {
     }
 
     public void writeLog(final String msg){
-        mHandler.obtainMessage(DevUtils.MESSAGE_INFO, msg).sendToTarget();
+        // mHandler.obtainMessage(DevUtils.MESSAGE_INFO, msg).sendToTarget();
+        NetUtils.print(msg);
     }
 }

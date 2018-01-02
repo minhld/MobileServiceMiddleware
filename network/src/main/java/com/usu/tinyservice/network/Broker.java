@@ -22,7 +22,7 @@ public class Broker extends Thread {
     // private AckServerListener ackServer;
 
     long startTime = 0;
-    static long startRLRequestTime = 0;
+    // static long startRLRequestTime = 0;
 
     public Broker() {
         this.start();

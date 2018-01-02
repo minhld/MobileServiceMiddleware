@@ -21,6 +21,8 @@ import java.util.Map;
  * Created by lee on 9/12/17.
  */
 public class DevUtils {
+    public static final int MESSAGE_GO_CONNECT = 0x500 + 1;
+    public static final int MESSAGE_CLIENT_CONNECT = 0x500 + 2;
     public static final int MESSAGE_INFO = 0x500 + 6;
 
     // these constants are for PERMISSION GRANT
@@ -33,8 +35,6 @@ public class DevUtils {
     public static class XDevice {
         public String address;
         public String name;
-
-        // public XDevice () {}
 
         public XDevice (String address, String name) {
             this.address = address;

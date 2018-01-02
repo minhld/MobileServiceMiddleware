@@ -20,7 +20,6 @@ import com.usu.connection.wifi.WiFiSupporter;
 import com.usu.mobileservice.g2gapp.ServiceAClient;
 import com.usu.mobileservice.g2gapp.ServiceAWorker;
 import com.usu.tinyservice.messages.binary.ResponseMessage;
-import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
 
@@ -68,23 +67,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-//                case Utils.MESSAGE_READ_SERVER: {
-//                    String strMsg = msg.obj.toString();
-//                    UITools.writeLog(MainActivity.this, infoText, strMsg);
-//                    break;
-//                }
-//                case Utils.MESSAGE_READ_CLIENT: {
-//                    String strMsg = msg.obj.toString();
-//                    UITools.writeLog(MainActivity.this, infoText, strMsg);
-//                    break;
-//                }
-//                case Utils.MAIN_JOB_DONE: {
-//
-//                    break;
-//                }
+                case DevUtils.MESSAGE_GO_CONNECT: {
+                    // WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
+                    break;
+                }
+                case DevUtils.MESSAGE_CLIENT_CONNECT: {
+                    // WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
+                    initWorker();
+                    break;
+                }
                 case DevUtils.MESSAGE_INFO: {
-                    String strMsg = (String) msg.obj;
-                    UITools.writeLog(MainActivity.this, infoText, strMsg);
+                    UITools.printLog(MainActivity.this, infoText, msg.obj);
+                    // DevUtils.printLog(MainActivity.this, infoText, msg.obj);
                     break;
                 }
             }
@@ -100,13 +94,15 @@ public class MainActivity extends AppCompatActivity {
         infoText.setMovementMethod(new ScrollingMovementMethod());
 
         // WiFi-Direct
-        wfdSupporter = new WFDSupporter(this, mainUiHandler);
+        wfdSupporter = new WFDSupporter(this);
         deviceList.setAdapter(wfdSupporter.getDeviceListAdapter());
 
         // Original WiFi Interface
-        wfSupport = new WiFiSupporter(this, mainUiHandler);
+        wfSupport = new WiFiSupporter(this);
         wifiList.setAdapter(wfSupport.getWifiListAdapter());
 
+        // set up the main handler
+        NetUtils.setMainHandler(mainUiHandler);
 
 //        // ------ Prepared for Original WiFi ------
 //        orgWifiBroader = new WiFiManager(this, infoText);
@@ -161,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                     wfSupport.requestPermission(MainActivity.this);
                 } else {
                     // search for Wifi network list
-                    // orgWifiBroader.getWifiConnections();
                     wfSupport.getWifiConnections();
                 }
             }
@@ -189,7 +184,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        // orgWifiBroader.getWifiConnections();
+        // search for Wifi network list
+        wfSupport.getWifiConnections();
     }
 
     @Override
@@ -204,10 +200,6 @@ public class MainActivity extends AppCompatActivity {
         wfdSupporter.runOnResume();
     }
 
-    void initBroker() {
-        new Broker();
-    }
-
     void initClient() {
         client = new ServiceAClient(new ReceiveListener() {
             @Override
@@ -216,15 +208,15 @@ public class MainActivity extends AppCompatActivity {
                 if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
                     // a denied message from the Broker
                     String msg = (String) resp.outParam.values[0];
-                    UITools.writeLog(MainActivity.this, infoText, "[Client] Error " + msg);
+//                    UITools.writeLog(MainActivity.this, infoText, "[Client] Error " + msg);
                 } else if (resp.functionName.equals("greeting")) {
                     java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
-                    UITools.writeLog(MainActivity.this, infoText, "[Client] Received: " + msgs[0]);
+//                    UITools.writeLog(MainActivity.this, infoText, "[Client] Received: " + msgs[0]);
                 } else if (resp.functionName.equals("getFileList2")) {
                     java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
-                    UITools.writeLog(MainActivity.this, infoText, "[Client] Received: ");
+//                    UITools.writeLog(MainActivity.this, infoText, "[Client] Received: ");
                     for (int i = 0; i < files.length; i++) {
-                        UITools.writeLog(MainActivity.this, infoText, "\t File: " + files[i]);
+//                        UITools.writeLog(MainActivity.this, infoText, "\t File: " + files[i]);
                     }
                 }
             }

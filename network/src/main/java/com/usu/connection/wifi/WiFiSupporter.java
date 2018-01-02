@@ -2,7 +2,6 @@ package com.usu.connection.wifi;
 
 import android.app.Activity;
 import android.net.wifi.ScanResult;
-import android.os.Handler;
 
 import com.usu.connection.R;
 
@@ -19,10 +18,10 @@ public class WiFiSupporter {
     WiFiManager wiFiManager;
     WiFiListAdapter wifiListAdapter;
 
-    public WiFiSupporter(Activity context, final Handler mainHandler) {
+    public WiFiSupporter(Activity context) {
         this.context = context;
 
-        wiFiManager = new WiFiManager(context, mainHandler);
+        wiFiManager = new WiFiManager(context);
         wiFiManager.setmWifiScanListener(new WiFiManager.WiFiScanListener() {
             @Override
             public void listReceived(List<ScanResult> mScanResults) {

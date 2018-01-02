@@ -1,11 +1,19 @@
 package com.usu.tinyservice.network;
 
+import android.graphics.Color;
+import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -17,13 +25,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.usu.connection.utils.DevUtils;
 import com.usu.tinyservice.messages.binary.OutParam;
 import com.usu.tinyservice.messages.binary.ResponseMessage;
 import com.usu.tinyservice.messages.json.JsonRequestMessage;
 import com.usu.tinyservice.messages.json.JsonResponseMessage;
 
 public class NetUtils {
-	public static enum WorkMode {
+	public enum WorkMode {
 		NORMAL,
 		FORWARD
 	}
@@ -44,8 +53,10 @@ public class NetUtils {
     public static final String INFO_WORKER_FAILED = "WORKER_FAILED";
     
 	
-    private static Random rand = new Random(System.currentTimeMillis());
+    static Random rand = new Random(System.currentTimeMillis());
+	static final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 
+	static Handler mainUiHandler;
     
     /**
      * get all functions provided by a worker
@@ -344,13 +355,36 @@ public class NetUtils {
 			Thread.sleep(time);
 		} catch(Exception e) { }
 	}
-    
+
+	/**
+	 * set the main handler for the entire application
+	 *
+	 * @param mainUiHandler
+	 */
+	public static void setMainHandler(Handler mainUiHandler) {
+		NetUtils.mainUiHandler = mainUiHandler;
+	}
+
     public static void print(String msg) {
-		System.out.println(msg);
+		// System.out.println(msg);
+		// NetUtils.mainUiHandler.obtainMessage(DevUtils.MESSAGE_INFO, msg).sendToTarget();
+		msg = SDF.format(new Date()) + ": " + msg + "\r\n";
+		SpannableStringBuilder sb = new SpannableStringBuilder(msg);
+		ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(83, 83, 83));
+		sb.setSpan(fcs, 0, msg.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+		NetUtils.mainUiHandler.obtainMessage(DevUtils.MESSAGE_INFO, sb).sendToTarget();
     }
     
     public static void printX(String msg) {
-    	System.err.println(msg);
+    	// System.err.println(msg);
+		msg = SDF.format(new Date()) + ": " + msg + "\r\n";
+		SpannableStringBuilder sb = new SpannableStringBuilder(msg);
+		ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(22, 116, 50));
+		sb.setSpan(fcs, 0, msg.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+		NetUtils.mainUiHandler.obtainMessage(DevUtils.MESSAGE_INFO, sb).sendToTarget();
     }
-    
+
+    public static void raiseEvent(int msgId, Object msg) {
+		NetUtils.mainUiHandler.obtainMessage(msgId, msg).sendToTarget();
+	}
 }

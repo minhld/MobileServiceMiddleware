@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
-import android.os.Handler;
 
 import com.usu.connection.R;
+import com.usu.connection.utils.DevUtils;
+import com.usu.tinyservice.network.Broker;
+import com.usu.tinyservice.network.NetUtils;
 
 import java.util.Collection;
 
@@ -22,10 +24,10 @@ public class WFDSupporter {
     IntentFilter mIntentFilter;
     WFDListAdapter deviceListAdapter;
 
-    public WFDSupporter(Activity context, final Handler mainHandler) {
+    public WFDSupporter(Activity context) {
         this.context = context;
 
-        wfdManager = new WFDManager(this.context, mainHandler);
+        wfdManager = new WFDManager(this.context);
         wfdManager.setBroadCastListener(new WFDManager.BroadCastListener() {
             @Override
             public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
@@ -42,11 +44,17 @@ public class WFDSupporter {
 
                 String brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
                 if (p2pInfo.groupFormed && p2pInfo.isGroupOwner) {
-                    // when device becomes an Owner
-                    // a Broker should be placed on the Owner
+                    // When the device becomes an GO
+                    // - a Broker should be placed on the GO
+                    // - this Broker will be set on WiFi-Direct interface. it will hold
+                    //   the default IP 192.168.49.1
+                    new Broker(brokerIp);
                 } else if (p2pInfo.groupFormed) {
-                    // when device becomes a Client
-                    // a Client or Worker should be placed on the Client
+                    // When the device becomes a Client
+                    // - a Worker should be placed on the Client
+                    // - the Worker will hold an IP and connect to the Broker which is
+                    //   located on the GO (holding IP 192.168.49.1)
+                    NetUtils.raiseEvent(DevUtils.MESSAGE_CLIENT_CONNECT, p2pInfo);
                 }
             }
         });

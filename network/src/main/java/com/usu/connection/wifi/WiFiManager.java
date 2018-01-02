@@ -10,11 +10,10 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.text.format.Formatter;
 
-import com.usu.connection.utils.DevUtils;
+import com.usu.tinyservice.network.NetUtils;
 
 import java.util.List;
 
@@ -28,21 +27,18 @@ public class WiFiManager {
     android.net.wifi.WifiManager mWifiManager;
     WiFiScanListener scanListener;
 
-    Handler mHandler;
     String deviceName;
 
     public void setmWifiScanListener(WiFiScanListener scanListener) {
         this.scanListener = scanListener;
     }
 
-    public WiFiManager(Activity c, Handler mHandler) {
+    public WiFiManager(Activity c) {
         mWifiManager = (android.net.wifi.WifiManager) c.getApplicationContext().
                                     getSystemService(Context.WIFI_SERVICE);
         IntentFilter filters = new IntentFilter(android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         filters.addAction(android.net.wifi.WifiManager.SUPPLICANT_STATE_CHANGED_ACTION);
         c.registerReceiver(mWifiScanReceiver, filters);
-
-        this.mHandler = mHandler;
     }
 
     /**
@@ -189,7 +185,7 @@ public class WiFiManager {
     }
 
     public void writeLog(final String msg){
-        mHandler.obtainMessage(DevUtils.MESSAGE_INFO, msg).sendToTarget();
+        NetUtils.print(msg);
     }
 
 }
