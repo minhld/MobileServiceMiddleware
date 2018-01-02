@@ -5,7 +5,7 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-        applicationId "com.usu.mobileservice.annotationchecker"
+        applicationId "com.usu.mobileservice.g2gapp"
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1

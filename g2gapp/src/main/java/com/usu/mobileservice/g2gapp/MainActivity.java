@@ -108,28 +108,6 @@ public class MainActivity extends AppCompatActivity {
         wifiList.setAdapter(wfSupport.getWifiListAdapter());
 
 
-//        // ------ Prepare for WiFi Direct ------
-//        wifiBroader = new WifiBroader(this, infoText);
-//        wifiBroader.setSocketHandler(mainUiHandler);
-//        wifiBroader.setBroadCastListener(new WifiBroader.BroadCastListener() {
-//            @Override
-//            public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
-//                deviceListAdapter.clear();
-//                deviceListAdapter.addAll(deviceList);
-//                deviceListAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void socketUpdated(Utils.SocketType socketType, boolean connected) {
-//
-//            }
-//        });
-//        mIntentFilter = wifiBroader.getSingleIntentFilter();
-//
-//        // device list
-//        deviceListAdapter = new WifiPeerListAdapter(this, R.layout.row_devices, wifiBroader);
-//        deviceList.setAdapter(deviceListAdapter);
-
 //        // ------ Prepared for Original WiFi ------
 //        orgWifiBroader = new WiFiManager(this, infoText);
 //        orgWifiBroader.setSocketHandler(mainUiHandler);
