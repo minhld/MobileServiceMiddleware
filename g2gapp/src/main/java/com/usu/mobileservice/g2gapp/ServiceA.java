@@ -17,6 +17,11 @@ import java.io.File;
         transmitType = TransmitType.Binary)
 public class ServiceA {
 
+    @ServiceMethod(syncMode = SyncMode.Async)
+    public String[] greeting(String msg) {
+        return new String[] { msg, msg.toUpperCase() };
+    }
+
     @ServiceMethod(
             syncMode = SyncMode.Async,
             suffix = "2")

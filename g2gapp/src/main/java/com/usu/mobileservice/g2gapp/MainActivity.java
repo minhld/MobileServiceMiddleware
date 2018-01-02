@@ -17,6 +17,12 @@ import android.widget.TextView;
 import com.usu.connection.utils.DevUtils;
 import com.usu.connection.wfd.WFDSupporter;
 import com.usu.connection.wifi.WiFiSupporter;
+import com.usu.mobileservice.g2gapp.ServiceAClient;
+import com.usu.mobileservice.g2gapp.ServiceAWorker;
+import com.usu.tinyservice.messages.binary.ResponseMessage;
+import com.usu.tinyservice.network.Broker;
+import com.usu.tinyservice.network.NetUtils;
+import com.usu.tinyservice.network.ReceiveListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,12 +62,7 @@ public class MainActivity extends AppCompatActivity {
     WFDSupporter wfdSupporter;
     WiFiSupporter wfSupport;
 
-//    WifiBroader wifiBroader;
-//    WiFiManager orgWifiBroader;
-//    IntentFilter mIntentFilter;
-
-//    WifiPeerListAdapter deviceListAdapter;
-//    WiFiListAdapter networkListAdapter;
+    ServiceAClient client;
 
     Handler mainUiHandler = new Handler() {
         @Override
@@ -169,8 +170,8 @@ public class MainActivity extends AppCompatActivity {
         sendWifiDirectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // wifiBroader.writeString("sent a ACK :)");
-                // send data
+                initClient();
+                client.greeting("send " + client.client.getName());
             }
         });
 
@@ -225,4 +226,34 @@ public class MainActivity extends AppCompatActivity {
         wfdSupporter.runOnResume();
     }
 
+    void initBroker() {
+        new Broker();
+    }
+
+    void initClient() {
+        client = new ServiceAClient(new ReceiveListener() {
+            @Override
+            public void dataReceived(String idChain, String funcName, byte[] data) {
+                ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
+                if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
+                    // a denied message from the Broker
+                    String msg = (String) resp.outParam.values[0];
+                    UITools.writeLog(MainActivity.this, infoText, "[Client] Error " + msg);
+                } else if (resp.functionName.equals("greeting")) {
+                    java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
+                    UITools.writeLog(MainActivity.this, infoText, "[Client] Received: " + msgs[0]);
+                } else if (resp.functionName.equals("getFileList2")) {
+                    java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
+                    UITools.writeLog(MainActivity.this, infoText, "[Client] Received: ");
+                    for (int i = 0; i < files.length; i++) {
+                        UITools.writeLog(MainActivity.this, infoText, "\t File: " + files[i]);
+                    }
+                }
+            }
+        });
+    }
+
+    void initWorker() {
+        new ServiceAWorker();
+    }
 }
