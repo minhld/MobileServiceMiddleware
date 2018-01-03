@@ -366,8 +366,6 @@ public class NetUtils {
 	}
 
     public static void print(String msg) {
-		// System.out.println(msg);
-		// NetUtils.mainUiHandler.obtainMessage(DevUtils.MESSAGE_INFO, msg).sendToTarget();
 		msg = SDF.format(new Date()) + ": " + msg + "\r\n";
 		SpannableStringBuilder sb = new SpannableStringBuilder(msg);
 		ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(83, 83, 83));
@@ -376,13 +374,26 @@ public class NetUtils {
     }
     
     public static void printX(String msg) {
-    	// System.err.println(msg);
 		msg = SDF.format(new Date()) + ": " + msg + "\r\n";
 		SpannableStringBuilder sb = new SpannableStringBuilder(msg);
 		ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(22, 116, 50));
 		sb.setSpan(fcs, 0, msg.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 		NetUtils.mainUiHandler.obtainMessage(DevUtils.MESSAGE_INFO, sb).sendToTarget();
     }
+
+	/**
+	 * print message with specific color
+	 *
+	 * @param msg
+	 * @param color
+	 */
+	public static void printX(String msg, int color) {
+		msg = SDF.format(new Date()) + ": " + msg + "\r\n";
+		SpannableStringBuilder sb = new SpannableStringBuilder(msg);
+		ForegroundColorSpan fcs = new ForegroundColorSpan(color);
+		sb.setSpan(fcs, 0, msg.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+		NetUtils.mainUiHandler.obtainMessage(DevUtils.MESSAGE_INFO, sb).sendToTarget();
+	}
 
     public static void raiseEvent(int msgId, Object msg) {
 		NetUtils.mainUiHandler.obtainMessage(msgId, msg).sendToTarget();

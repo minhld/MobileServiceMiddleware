@@ -2,8 +2,11 @@ package com.usu.connection.wifi;
 
 import android.app.Activity;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 
 import com.usu.connection.R;
+import com.usu.connection.utils.DevUtils;
+import com.usu.tinyservice.network.NetUtils;
 
 import java.util.List;
 
@@ -50,7 +53,8 @@ public class WiFiSupporter {
      * @param c
      */
     public void getWifiInfo(Activity c) {
-        wiFiManager.checkConnectedToDesiredWifi(c);
+        WifiInfo wifiInfo = wiFiManager.checkConnectedToDesiredWifi(c);
+        NetUtils.raiseEvent(DevUtils.MESSAGE_CLIENT_CONNECTED, wifiInfo);
     }
 
     /**

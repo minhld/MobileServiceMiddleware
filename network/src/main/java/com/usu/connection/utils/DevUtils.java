@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -21,8 +22,9 @@ import java.util.Map;
  * Created by lee on 9/12/17.
  */
 public class DevUtils {
-    public static final int MESSAGE_GO_CONNECT = 0x500 + 1;
-    public static final int MESSAGE_CLIENT_CONNECT = 0x500 + 2;
+    public static final int MESSAGE_GO_CONNECTED = 0x500 + 1;
+    public static final int MESSAGE_CLIENT_CONNECTED = 0x500 + 2;
+    public static final int MESSAGE_WIFI_DETECTED = 0x500 + 3;
     public static final int MESSAGE_INFO = 0x500 + 6;
 
     // these constants are for PERMISSION GRANT
@@ -148,6 +150,16 @@ public class DevUtils {
             e.printStackTrace();
         }
         */
+    }
+
+    /**
+     * convert IP from Integer format issued by {@link android.net.wifi.WifiInfo} to String
+     *
+     * @param ip
+     * @return
+     */
+    public static String getIPString(int ip) {
+        return Formatter.formatIpAddress(ip);
     }
 
     public interface InputDialogListener {

@@ -13,6 +13,7 @@ import android.net.wifi.WifiInfo;
 import android.support.v4.app.ActivityCompat;
 import android.text.format.Formatter;
 
+import com.usu.connection.utils.DevUtils;
 import com.usu.tinyservice.network.NetUtils;
 
 import java.util.List;
@@ -162,19 +163,19 @@ public class WiFiManager {
      *
      * @param c
      */
-    public void checkConnectedToDesiredWifi(Context c) {
+    public WifiInfo checkConnectedToDesiredWifi(Context c) {
         android.net.wifi.WifiManager wifiManager = (android.net.wifi.WifiManager)
                                     c.getSystemService(Context.WIFI_SERVICE);
 
         WifiInfo wifi = wifiManager.getConnectionInfo();
         if (wifi != null) {
-            deviceName = wifi.getSSID();
-            writeLog("connected to: " + deviceName + "; " +
+            writeLog("connected to: " + wifi.getSSID() + "; " +
                     "bssid: " + wifi.getBSSID() + "; " +
-                    "IP: " + Formatter.formatIpAddress(wifi.getIpAddress()) + "; " +
+                    "IP: " + DevUtils.getIPString(wifi.getIpAddress()) + "; " +
                     "freq: " + wifi.getFrequency() + "MHz; " +
-                    "speed: " + wifi.getLinkSpeed() + "Mbps; ");
+                    "speed: " + wifi.getLinkSpeed() + "MBps; ");
         }
+        return wifi;
     }
 
     /**

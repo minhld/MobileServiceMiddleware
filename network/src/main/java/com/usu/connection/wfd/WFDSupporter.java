@@ -7,7 +7,6 @@ import android.net.wifi.p2p.WifiP2pInfo;
 
 import com.usu.connection.R;
 import com.usu.connection.utils.DevUtils;
-import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 
 import java.util.Collection;
@@ -42,7 +41,8 @@ public class WFDSupporter {
                     return;
                 }
 
-                String brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
+                // String brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
+
                 if (p2pInfo.groupFormed && p2pInfo.isGroupOwner) {
                     // When the device becomes an GO
                     // - a Broker should be placed on the GO
@@ -50,7 +50,7 @@ public class WFDSupporter {
                     //   the default IP 192.168.49.1
 
                     // raise an event back to the main UI thread
-                    NetUtils.raiseEvent(DevUtils.MESSAGE_GO_CONNECT, p2pInfo);
+                    NetUtils.raiseEvent(DevUtils.MESSAGE_GO_CONNECTED, p2pInfo);
                     // new Broker("*");
                     // new Broker(brokerIp);
                 } else if (p2pInfo.groupFormed) {
@@ -58,7 +58,7 @@ public class WFDSupporter {
                     // - a Worker should be placed on the Client
                     // - the Worker will hold an IP and connect to the Broker which is
                     //   located on the GO (holding IP 192.168.49.1)
-                    NetUtils.raiseEvent(DevUtils.MESSAGE_CLIENT_CONNECT, p2pInfo);
+                    NetUtils.raiseEvent(DevUtils.MESSAGE_CLIENT_CONNECTED, p2pInfo);
                 }
             }
         });

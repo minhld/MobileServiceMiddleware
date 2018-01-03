@@ -1,9 +1,7 @@
 package com.usu.mobileservice.g2gapp;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.p2p.WifiP2pInfo;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -18,12 +16,13 @@ import android.widget.TextView;
 import com.usu.connection.utils.DevUtils;
 import com.usu.connection.wfd.WFDSupporter;
 import com.usu.connection.wifi.WiFiSupporter;
-import com.usu.mobileservice.g2gapp.ServiceAClient;
-import com.usu.mobileservice.g2gapp.ServiceAWorker;
 import com.usu.tinyservice.messages.binary.ResponseMessage;
 import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
+
+import com.usu.mobileservice.g2gapp.ServiceAClient;
+import com.usu.mobileservice.g2gapp.ServiceAWorker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,11 +53,20 @@ public class MainActivity extends AppCompatActivity {
     Button sendWifiDirectBtn;
 
     // ------ THIRD BUTTON ROW ------
-    @BindView(R.id.searchWiFiBtn)
-    Button searchWiFiBtn;
+//    @BindView(R.id.searchWiFiBtn)
+//    Button searchWiFiBtn;
 
     @BindView(R.id.getWiFiInfoBtn)
     Button getWiFiInfoBtn;
+
+    @BindView(R.id.startWiFiBrokerBtn)
+    Button startWiFiBrokerBtn;
+
+    @BindView(R.id.startWiFiWorkerBtn)
+    Button startWiFiWorkerBtn;
+
+    @BindView(R.id.startWiFiClientBtn)
+    Button startWiFiClientBtn;
 
     @BindView(R.id.sendWifiDataBtn)
     Button sendWiFiDataBtn;
@@ -77,23 +85,28 @@ public class MainActivity extends AppCompatActivity {
 
     ServiceAClient client;
 
-    String brokerIp;
+    String brokerIp, wifiBrokerIp;
 
     Handler mainUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case DevUtils.MESSAGE_GO_CONNECT: {
+                case DevUtils.MESSAGE_GO_CONNECTED: {
                     WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
                     brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
                     UITools.printLog(MainActivity.this, infoText, "Server " + brokerIp);
                     break;
                 }
-                case DevUtils.MESSAGE_CLIENT_CONNECT: {
+                case DevUtils.MESSAGE_CLIENT_CONNECTED: {
                     WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
                     // initWorker(p2pInfo.groupOwnerAddress.getHostAddress());
                     brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
                     UITools.printLog(MainActivity.this, infoText, brokerIp);
+                    break;
+                }
+                case DevUtils.MESSAGE_WIFI_DETECTED: {
+                    WifiInfo wifiInfo = (WifiInfo) msg.obj;
+                    wifiBrokerIp = DevUtils.getIPString(wifiInfo.getIpAddress());
                     break;
                 }
                 case DevUtils.MESSAGE_INFO: {
@@ -192,23 +205,44 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // ------ THIRD BUTTON ROW ------
-        searchWiFiBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                        checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    wfSupport.requestPermission(MainActivity.this);
-                } else {
-                    // search for Wifi network list
-                    wfSupport.getWifiConnections();
-                }
-            }
-        });
+//        searchWiFiBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+//                        checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    wfSupport.requestPermission(MainActivity.this);
+//                } else {
+//                    // search for Wifi network list
+//                    wfSupport.getWifiConnections();
+//                }
+//            }
+//        });
 
         getWiFiInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 wfSupport.getWifiInfo(MainActivity.this);
+            }
+        });
+
+        startWiFiBrokerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Broker(wifiBrokerIp);
+            }
+        });
+
+        startWiFiWorkerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        startWiFiClientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

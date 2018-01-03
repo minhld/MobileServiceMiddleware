@@ -51,6 +51,7 @@
         android:layout_below="@+id/wfdComponents"
         android:orientation="horizontal">
 
+        <!--
         <Button
             android:text="Search\n WiFi"
             android:textSize="9sp"
@@ -59,6 +60,7 @@
             android:layout_height="45dp"
             android:id="@+id/searchWiFiBtn"
             android:layout_toStartOf="@+id/getWiFiInfoBtn" />
+        -->
 
         <Button
             android:text="WiFi\n Info"
@@ -68,6 +70,30 @@
             android:layout_height="45dp"
             android:id="@+id/getWiFiInfoBtn"
             android:layout_toStartOf="@+id/sendWifiDataBtn" />
+
+        <Button
+            android:text="Start\n Broker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWiFiBrokerBtn" />
+
+        <Button
+            android:text="Start\n Worker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWiFiWorkerBtn" />
+
+        <Button
+            android:text="Start\n Client"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWiFiClientBtn" />
 
         <Button
             android:text="Send\n Data"
