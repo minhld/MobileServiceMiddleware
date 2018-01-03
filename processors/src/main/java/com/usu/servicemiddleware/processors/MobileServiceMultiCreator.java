@@ -71,12 +71,15 @@ public class MobileServiceMultiCreator {
 			writer.println("  public " + serverClassName + "() {\n" + 
 						   "    this(NetUtils.DEFAULT_IP);\n" +
 						   "  }\n");
-			writer.println("  public " + serverClassName + "(String brokerIp) {");
-			writer.println("    " + classInstance + " = new " + className + "();");
-			writer.println("    new WorkerX(brokerIp);");
-			writer.println("  }");
-			writer.println();
-			
+			writer.println("  public " + serverClassName + "(String brokerIp) {\n" +
+						   "    " + classInstance + " = new " + className + "();\n" +
+						   "    new WorkerX(brokerIp);\n" +
+						   "  }\n\n" +
+						   "  public " + serverClassName + "(String brokerIp, int port) {\n" +
+						   "    " + classInstance + " = new " + className + "();\n" +
+						   "    new WorkerX(brokerIp, port);\n" +
+					 	   "  }\n\n");
+
 			// define the extended Responder
 			writer.println("  class WorkerX extends Worker {");
 			writer.println("    public WorkerX() {\n" + 
@@ -84,8 +87,10 @@ public class MobileServiceMultiCreator {
 						   "    }\n\n" +
 						   "    public WorkerX(String brokerIp) {\n" + 
 						   "      super(brokerIp);\n" +
-						   "    }\n\n");
-			
+						   "    }\n\n" +
+						   "    public WorkerX(String brokerIp, int port) {\n" +
+						   "      super(brokerIp, port);\n" +
+					 	   "    }\n\n");
 			writer.println("    @Override");
 			writer.println("    public byte[] resolveRequest(byte[] packageBytes) {");
 			
@@ -340,9 +345,15 @@ public class MobileServiceMultiCreator {
 						   "    this.listener = listener;\n\n" +
 						   "    // create request message and send\n" +
 						   "    client = new RmiClient(brokerIp);\n" +
-						   "  }");
-			// writer.println();
-			
+						   "  }\n");
+
+			writer.println("  public " + clientClassName + "(String brokerIp, int port, ReceiveListener listener) {" +
+						   "    // start listener\n" +
+						   "    this.listener = listener;\n\n" +
+						   "    // create request message and send\n" +
+						   "    client = new RmiClient(brokerIp, port);\n" +
+						   "  }\n");
+
 			// define the client function stubs
 			// get list of inner methods
 			List<? extends Element> methods = type.getEnclosedElements();
@@ -361,6 +372,9 @@ public class MobileServiceMultiCreator {
 						   "    }\n\n" +
 						   "    public RmiClient(String brokerIp) {\n" +
 						   "      super(brokerIp);\n" +
+						   "    }\n\n" +
+						   "    public RmiClient(String brokerIp, int port) {\n" +
+						   "      super(brokerIp, port);\n" +
 						   "    }\n\n" +
 						   "	@Override\n" +
 						   "	public void receive(String idChain, String funcName, byte[] resp) {\n" + 
