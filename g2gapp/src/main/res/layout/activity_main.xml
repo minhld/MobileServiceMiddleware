@@ -21,8 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/linearLayout"
-        android:layout_toStartOf="@+id/sendWifiDataBtn"
-        android:layout_below="@+id/searchWiFiBtn"
+        android:layout_below="@+id/wfPanel"
         android:layout_alignParentEnd="true"
         android:layout_above="@+id/infoText">
 
@@ -45,67 +44,87 @@
             android:layout_marginBottom="0dp" />
     </LinearLayout>
 
-    <Button
-        android:text="Send WiFi Data"
-        android:textSize="10sp"
-        android:layout_width="80dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:id="@+id/sendWifiDataBtn"
-        android:layout_below="@+id/discoverBtn"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/wfPanel"
+        android:layout_below="@+id/wfdPanel"
+        android:orientation="horizontal">
 
-    <Button
-        android:text="Search WiFi"
-        android:textSize="12sp"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:id="@+id/searchWiFiBtn"
-        android:layout_below="@+id/createGroupBtn"
-        android:layout_toStartOf="@+id/getWiFiInfoBtn" />
+        <Button
+            android:text="Search\n WiFi"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/searchWiFiBtn"
+            android:layout_toStartOf="@+id/getWiFiInfoBtn" />
 
-    <Button
-        android:text="Get WiFi Info"
-        android:textSize="10sp"
-        android:layout_width="85dp"
-        android:layout_height="45dp"
-        android:id="@+id/getWiFiInfoBtn"
-        android:layout_below="@+id/createGroupBtn"
-        android:layout_toStartOf="@+id/sendWifiDataBtn" />
+        <Button
+            android:text="WiFi\n Info"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/getWiFiInfoBtn"
+            android:layout_toStartOf="@+id/sendWifiDataBtn" />
 
-    <Button
-        android:text="Get Direct Info"
-        android:textSize="10sp"
-        android:layout_width="80dp"
-        android:layout_height="45dp"
-        android:id="@+id/getDirectInfoBtn"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/sendWifiDirectBtn" />
+        <Button
+            android:text="Send\n Data"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/sendWifiDataBtn" />
 
-    <Button
-        android:text="Send Data"
-        android:textSize="12sp"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:id="@+id/sendWifiDirectBtn"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+    </LinearLayout>
 
-    <Button
-        android:text="Discover"
-        android:textSize="11sp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:id="@+id/discoverBtn"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/getDirectInfoBtn" />
+        android:id="@+id/wfdPanel"
+        android:orientation="horizontal">
 
-    <Button
-        android:text="Create Group"
-        android:textSize="11sp"
-        android:layout_width="80dp"
-        android:layout_height="45dp"
-        android:id="@+id/createGroupBtn"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/discoverBtn" />
+        <Button
+            android:text="Create\n Group"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/createGroupBtn" />
+
+        <Button
+            android:text="Disco-\nver"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/discoverBtn" />
+
+        <Button
+            android:text="WFD\n Info"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/getDirectInfoBtn" />
+
+        <Button
+            android:text="Send \n Data"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/sendWifiDirectBtn" />
+
+        <Button
+            android:text="Start\n Worker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWorkerBtn" />
+
+    </LinearLayout>
 
 </RelativeLayout>

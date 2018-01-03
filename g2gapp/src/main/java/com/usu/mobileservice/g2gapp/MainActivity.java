@@ -2,6 +2,7 @@ package com.usu.mobileservice.g2gapp;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.sendWifiDirectBtn)
     Button sendWifiDirectBtn;
 
+    @BindView(R.id.startWorkerBtn)
+    Button startWorkerBtn;
+
     @BindView(R.id.searchWiFiBtn)
     Button searchWiFiBtn;
 
@@ -63,17 +67,23 @@ public class MainActivity extends AppCompatActivity {
 
     ServiceAClient client;
 
+    String brokerIp;
+
     Handler mainUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DevUtils.MESSAGE_GO_CONNECT: {
-                    // WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
+                    WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
+                    brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
+                    UITools.printLog(MainActivity.this, infoText, "Server " + brokerIp);
                     break;
                 }
                 case DevUtils.MESSAGE_CLIENT_CONNECT: {
-                    // WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
-                    initWorker();
+                    WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
+                    // initWorker(p2pInfo.groupOwnerAddress.getHostAddress());
+                    brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
+                    UITools.printLog(MainActivity.this, infoText, brokerIp);
                     break;
                 }
                 case DevUtils.MESSAGE_INFO: {
@@ -144,8 +154,16 @@ public class MainActivity extends AppCompatActivity {
         sendWifiDirectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initClient();
+                initClient(brokerIp);
+                NetUtils.sleep(1000);
                 client.greeting("send " + client.client.getName());
+            }
+        });
+
+        startWorkerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initWorker(brokerIp);
             }
         });
 
@@ -200,30 +218,38 @@ public class MainActivity extends AppCompatActivity {
         wfdSupporter.runOnResume();
     }
 
-    void initClient() {
-        client = new ServiceAClient(new ReceiveListener() {
+//    void initClient() {
+//        initClient("*");
+//    }
+
+    void initClient(String brokerIp) {
+        client = new ServiceAClient(brokerIp, new ReceiveListener() {
             @Override
             public void dataReceived(String idChain, String funcName, byte[] data) {
                 ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
                 if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
                     // a denied message from the Broker
                     String msg = (String) resp.outParam.values[0];
-//                    UITools.writeLog(MainActivity.this, infoText, "[Client] Error " + msg);
+                    UITools.printLog(MainActivity.this, infoText, "[Client-" + client.client.clientId + "] Error " + msg);
                 } else if (resp.functionName.equals("greeting")) {
                     java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
-//                    UITools.writeLog(MainActivity.this, infoText, "[Client] Received: " + msgs[0]);
+                    UITools.printLog(MainActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: " + msgs[0]);
                 } else if (resp.functionName.equals("getFileList2")) {
                     java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
-//                    UITools.writeLog(MainActivity.this, infoText, "[Client] Received: ");
+                    UITools.printLog(MainActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: ");
                     for (int i = 0; i < files.length; i++) {
-//                        UITools.writeLog(MainActivity.this, infoText, "\t File: " + files[i]);
+                        UITools.printLog(MainActivity.this, infoText, "\t File: " + files[i]);
                     }
                 }
             }
         });
     }
 
-    void initWorker() {
-        new ServiceAWorker();
+//    void initWorker() {
+//        initWorker("*");
+//    }
+
+    void initWorker(String brokerIp) {
+        new ServiceAWorker(brokerIp);
     }
 }

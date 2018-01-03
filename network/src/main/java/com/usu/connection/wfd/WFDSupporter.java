@@ -48,6 +48,8 @@ public class WFDSupporter {
                     // - a Broker should be placed on the GO
                     // - this Broker will be set on WiFi-Direct interface. it will hold
                     //   the default IP 192.168.49.1
+
+                    // new Broker("*");
                     new Broker(brokerIp);
                 } else if (p2pInfo.groupFormed) {
                     // When the device becomes a Client
