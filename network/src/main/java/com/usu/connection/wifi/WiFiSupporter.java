@@ -45,6 +45,15 @@ public class WiFiSupporter {
     }
 
     /**
+     * get WiFi information
+     *
+     * @param c
+     */
+    public void getWifiInfo(Activity c) {
+        wiFiManager.checkConnectedToDesiredWifi(c);
+    }
+
+    /**
      * request permission for an activity
      * @param c
      */

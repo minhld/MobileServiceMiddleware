@@ -52,7 +52,7 @@ public class WFDSupporter {
                     // raise an event back to the main UI thread
                     NetUtils.raiseEvent(DevUtils.MESSAGE_GO_CONNECT, p2pInfo);
                     // new Broker("*");
-                    new Broker(brokerIp);
+                    // new Broker(brokerIp);
                 } else if (p2pInfo.groupFormed) {
                     // When the device becomes a Client
                     // - a Worker should be placed on the Client

@@ -21,6 +21,7 @@ import com.usu.connection.wifi.WiFiSupporter;
 import com.usu.mobileservice.g2gapp.ServiceAClient;
 import com.usu.mobileservice.g2gapp.ServiceAWorker;
 import com.usu.tinyservice.messages.binary.ResponseMessage;
+import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
 
@@ -29,6 +30,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
+    // ------ FIRST BUTTON ROW ------
     @BindView(R.id.createGroupBtn)
     Button createGroupBtn;
 
@@ -38,12 +40,20 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.getDirectInfoBtn)
     Button getDirectInfoBtn;
 
-    @BindView(R.id.sendWifiDirectBtn)
-    Button sendWifiDirectBtn;
+    // ------ SECOND BUTTON ROW ------
+    @BindView(R.id.startBrokerBtn)
+    Button startBrokerBtn;
 
     @BindView(R.id.startWorkerBtn)
     Button startWorkerBtn;
 
+    @BindView(R.id.startClientBtn)
+    Button startClientBtn;
+
+    @BindView(R.id.sendWifiDirectBtn)
+    Button sendWifiDirectBtn;
+
+    // ------ THIRD BUTTON ROW ------
     @BindView(R.id.searchWiFiBtn)
     Button searchWiFiBtn;
 
@@ -130,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 //        networkListAdapter = new WiFiListAdapter(this, R.layout.row_wifi, orgWifiBroader);
 //        wifiList.setAdapter(networkListAdapter);
 
+        // ------ FIRST BUTTON ROW ------
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,12 +162,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        sendWifiDirectBtn.setOnClickListener(new View.OnClickListener() {
+        // ------ SECOND BUTTON ROW ------
+        startBrokerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initClient(brokerIp);
-                NetUtils.sleep(1000);
-                client.greeting("send " + client.client.getName());
+                new Broker(brokerIp);
             }
         });
 
@@ -167,6 +177,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        startClientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initClient(brokerIp);
+            }
+        });
+
+        sendWifiDirectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                client.greeting("send " + client.client.clientId);
+            }
+        });
+
+        // ------ THIRD BUTTON ROW ------
         searchWiFiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         getWiFiInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                wfSupport.getWifiInfo(MainActivity.this);
             }
         });
 
@@ -218,10 +243,6 @@ public class MainActivity extends AppCompatActivity {
         wfdSupporter.runOnResume();
     }
 
-//    void initClient() {
-//        initClient("*");
-//    }
-
     void initClient(String brokerIp) {
         client = new ServiceAClient(brokerIp, new ReceiveListener() {
             @Override
@@ -244,10 +265,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-//    void initWorker() {
-//        initWorker("*");
-//    }
 
     void initWorker(String brokerIp) {
         new ServiceAWorker(brokerIp);

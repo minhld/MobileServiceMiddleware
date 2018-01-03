@@ -162,7 +162,7 @@ public class WiFiManager {
      *
      * @param c
      */
-    private void checkConnectedToDesiredWifi(Context c) {
+    public void checkConnectedToDesiredWifi(Context c) {
         android.net.wifi.WifiManager wifiManager = (android.net.wifi.WifiManager)
                                     c.getSystemService(Context.WIFI_SERVICE);
 
