@@ -1,8 +1,15 @@
 package com.usu.mobileservice.g2gapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.text.SpannableStringBuilder;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -26,5 +33,48 @@ public class UITools {
                 log.append((SpannableStringBuilder) msg);
             }
         });
+    }
+
+    public static void printMsg(Context c, String msg) {
+        Toast.makeText(c, msg, Toast.LENGTH_LONG);
+    }
+
+    /**
+     * open a dialog to prompt text
+     *
+     * @param c
+     * @param listener
+     */
+    public static void showInputDialog(Context c, final InputDialogListener listener, String... defs) {
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(c);
+        View promptView = layoutInflater.inflate(R.layout.input_dialog, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        if (defs.length > 0) editText.setText(defs[0]);
+
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        listener.inputDone(editText.getText().toString());
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
+    public interface InputDialogListener {
+        void inputDone(String resultStr);
     }
 }

@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/linearLayout"
-        android:layout_below="@+id/wfPanel"
+        android:layout_below="@+id/textPanel"
         android:layout_alignParentEnd="true"
         android:layout_above="@+id/infoText">
 
@@ -42,6 +42,38 @@
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/createGroupBtn"
             android:layout_marginBottom="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/textPanel"
+        android:orientation="horizontal"
+        android:layout_below="@+id/wfPanel">
+
+        <EditText
+            android:id="@+id/ipText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="45dp"
+            android:textSize="11dp" />
+
+        <EditText
+            android:id="@+id/workerPortText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:textSize="11dp"
+            android:text="6666"/>
+
+        <EditText
+            android:id="@+id/clientPortText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:textSize="11dp"
+            android:text="6668"/>
+
     </LinearLayout>
 
     <LinearLayout

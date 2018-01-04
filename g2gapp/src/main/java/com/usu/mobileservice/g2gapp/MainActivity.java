@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.usu.connection.utils.DevUtils;
 import com.usu.connection.wfd.WFDSupporter;
@@ -71,6 +73,18 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.sendWifiDataBtn)
     Button sendWiFiDataBtn;
 
+    // ------ FORTH TEXT ROW ------
+    @BindView(R.id.ipText)
+    EditText ipText;
+
+    @BindView(R.id.workerPortText)
+    EditText workerPortText;
+
+    @BindView(R.id.clientPortText)
+    EditText clientPortText;
+
+    // ------ FIFTH LIST ROW ------
+
     @BindView(R.id.deviceList)
     ListView deviceList;
 
@@ -83,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     WFDSupporter wfdSupporter;
     WiFiSupporter wfSupport;
 
-    ServiceAClient client;
+    ServiceAClient client, wifiClient;
 
     String brokerIp, wifiBrokerIp;
 
@@ -107,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 case DevUtils.MESSAGE_WIFI_DETECTED: {
                     WifiInfo wifiInfo = (WifiInfo) msg.obj;
                     wifiBrokerIp = DevUtils.getIPString(wifiInfo.getIpAddress());
+                    ipText.setText(wifiBrokerIp);
                     break;
                 }
                 case DevUtils.MESSAGE_INFO: {
@@ -228,30 +243,45 @@ public class MainActivity extends AppCompatActivity {
         startWiFiBrokerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Broker(wifiBrokerIp);
+                String ip = ipText.getText().toString();
+                int clientPort = Integer.parseInt(clientPortText.getText().toString());
+                int workerPort = Integer.parseInt(workerPortText.getText().toString());
+
+                new Broker(ip, clientPort, workerPort);
             }
         });
 
         startWiFiWorkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String routerIp = wfSupport.getRouterWifiInfo(MainActivity.this);
 
+                UITools.showInputDialog(MainActivity.this, new UITools.InputDialogListener() {
+                    @Override
+                    public void inputDone(String resultStr) {
+                        // string
+                        String brokerIp = resultStr;
+                        new ServiceAWorker(brokerIp);
+                    }
+                }, routerIp);
             }
         });
 
         startWiFiClientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                initWiFiClient(wifiBrokerIp);
             }
         });
 
         sendWiFiDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // connect to one of the Wifi networks
-                // wifiBroader.requestGroupInfo();
-                // orgWifiBroader.writeString("sent a WiFi ACK :)");
+                if (wifiClient == null) {
+                    UITools.printMsg(MainActivity.this, "Client has not started yet.");
+                    return;
+                }
+                wifiClient.greeting("send " + wifiClient.client.clientId);
             }
         });
 
@@ -292,6 +322,29 @@ public class MainActivity extends AppCompatActivity {
                 } else if (resp.functionName.equals("getFileList2")) {
                     java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(MainActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: ");
+                    for (int i = 0; i < files.length; i++) {
+                        UITools.printLog(MainActivity.this, infoText, "\t File: " + files[i]);
+                    }
+                }
+            }
+        });
+    }
+
+    void initWiFiClient(String brokerIp) {
+        wifiClient = new ServiceAClient(brokerIp, new ReceiveListener() {
+            @Override
+            public void dataReceived(String idChain, String funcName, byte[] data) {
+                ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
+                if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
+                    // a denied message from the Broker
+                    String msg = (String) resp.outParam.values[0];
+                    UITools.printLog(MainActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Error " + msg);
+                } else if (resp.functionName.equals("greeting")) {
+                    java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
+                    UITools.printLog(MainActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: " + msgs[0]);
+                } else if (resp.functionName.equals("getFileList2")) {
+                    java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
+                    UITools.printLog(MainActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
                     for (int i = 0; i < files.length; i++) {
                         UITools.printLog(MainActivity.this, infoText, "\t File: " + files[i]);
                     }
