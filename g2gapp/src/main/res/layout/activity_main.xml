@@ -144,22 +144,6 @@
         android:layout_below="@+id/wfdPanel">
 
         <Button
-            android:text="Start\n Broker"
-            android:textSize="9sp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="45dp"
-            android:id="@+id/startBrokerBtn" />
-
-        <Button
-            android:text="Start\n Worker"
-            android:textSize="9sp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="45dp"
-            android:id="@+id/startWorkerBtn" />
-
-        <Button
             android:text="Start\n Client"
             android:textSize="9sp"
             android:layout_width="0dp"
@@ -175,6 +159,22 @@
             android:layout_height="45dp"
             android:id="@+id/sendWifiDirectBtn" />
 
+        <Button
+            android:text="Start WFD\n Bridge"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWFDBridgeBtn" />
+
+        <Button
+            android:text="Start WiFi\n Bridge"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWiFiBridgeBtn" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -184,12 +184,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:text="Create\n Group"
-            android:textSize="9sp"
+            android:id="@+id/createGroupBtn"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="45dp"
-            android:id="@+id/createGroupBtn" />
+            android:layout_weight="1"
+            android:text="Create\n Group"
+            android:textSize="9sp" />
 
         <Button
             android:text="Disco-\nver"
@@ -207,7 +207,21 @@
             android:layout_height="45dp"
             android:id="@+id/getDirectInfoBtn" />
 
+        <Button
+            android:text="Start\n Broker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startBrokerBtn" />
 
+        <Button
+            android:text="Start\n Worker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWorkerBtn" />
 
     </LinearLayout>
 
