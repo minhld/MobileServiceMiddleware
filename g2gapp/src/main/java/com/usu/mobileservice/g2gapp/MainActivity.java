@@ -19,6 +19,7 @@ import com.usu.connection.utils.DevUtils;
 import com.usu.connection.wfd.WFDSupporter;
 import com.usu.connection.wifi.WiFiSupporter;
 import com.usu.tinyservice.messages.binary.ResponseMessage;
+import com.usu.tinyservice.network.Bridge;
 import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
@@ -41,18 +42,25 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.getDirectInfoBtn)
     Button getDirectInfoBtn;
 
-    // ------ SECOND BUTTON ROW ------
     @BindView(R.id.startBrokerBtn)
     Button startBrokerBtn;
 
     @BindView(R.id.startWorkerBtn)
     Button startWorkerBtn;
 
+    // ------ SECOND BUTTON ROW ------
+
     @BindView(R.id.startClientBtn)
     Button startClientBtn;
 
     @BindView(R.id.sendWifiDirectBtn)
     Button sendWifiDirectBtn;
+
+    @BindView(R.id.startWFDBridgeBtn)
+    Button startWFDBridgeBtn;
+
+    @BindView(R.id.startWiFiBridgeBtn)
+    Button startWiFiBridgeBtn;
 
     // ------ THIRD BUTTON ROW ------
 //    @BindView(R.id.searchWiFiBtn)
@@ -152,22 +160,6 @@ public class MainActivity extends AppCompatActivity {
         // set up the main handler
         NetUtils.setMainHandler(mainUiHandler);
 
-//        // ------ Prepared for Original WiFi ------
-//        orgWifiBroader = new WiFiManager(this, infoText);
-//        orgWifiBroader.setSocketHandler(mainUiHandler);
-//        orgWifiBroader.setmWifiScanListener(new WiFiManager.WiFiScanListener() {
-//            @Override
-//            public void listReceived(List<ScanResult> mScanResults) {
-//                networkListAdapter.clear();
-//                networkListAdapter.addAll(mScanResults);
-//                networkListAdapter.notifyDataSetChanged();
-//            }
-//        });
-//
-//        // WiFi network list
-//        networkListAdapter = new WiFiListAdapter(this, R.layout.row_wifi, orgWifiBroader);
-//        wifiList.setAdapter(networkListAdapter);
-
         // ------ FIRST BUTTON ROW ------
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // ------ SECOND BUTTON ROW ------
         startBrokerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // ------ SECOND BUTTON ROW ------
+
         startClientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -216,6 +209,43 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 client.greeting("send " + client.client.clientId);
+            }
+        });
+
+        startWFDBridgeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String routerIp = wfSupport.getRouterWifiInfo(MainActivity.this);
+
+                UITools.showInputDialog2(MainActivity.this, new UITools.InputDialogListener() {
+                    @Override
+                    public void inputDone(String resultStr) { }
+
+                    @Override
+                    public void inputDone(String localBrokerIp, int localWorkerPort,
+                                          String remoteBrokerIp, int remoteClientPort) {
+                        // string
+                        new Bridge(localBrokerIp, localWorkerPort, remoteBrokerIp, remoteClientPort);
+                    }
+                }, routerIp);
+            }
+        });
+
+        startWiFiBridgeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String routerIp = wfSupport.getRouterWifiInfo(MainActivity.this);
+
+                UITools.showInputDialog2(MainActivity.this, new UITools.InputDialogListener() {
+                    @Override
+                    public void inputDone(String resultStr) { }
+                    @Override
+                    public void inputDone(String localBrokerIp, int localWorkerPort,
+                                          String remoteBrokerIp, int remoteClientPort) {
+                        // string
+                        new Bridge(localBrokerIp, localWorkerPort, remoteBrokerIp, remoteClientPort);
+                    }
+                }, routerIp);
             }
         });
 
@@ -262,6 +292,12 @@ public class MainActivity extends AppCompatActivity {
                         // string
                         String brokerIp = resultStr;
                         new ServiceAWorker(brokerIp);
+                    }
+
+                    @Override
+                    public void inputDone(String localBrokerIp, int localWorkerPort,
+                                          String remoteBrokerIp, int remoteClientPort) {
+                        // empty
                     }
                 }, routerIp);
             }

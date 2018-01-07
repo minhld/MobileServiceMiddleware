@@ -45,6 +45,51 @@ public class UITools {
      * @param c
      * @param listener
      */
+    public static void showInputDialog2(Context c, final InputDialogListener listener, String... defs) {
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(c);
+        View promptView = layoutInflater.inflate(R.layout.input_dialog_2, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(c);
+        alertDialogBuilder.setView(promptView);
+
+        final EditText localBrokerIpText = (EditText) promptView.findViewById(R.id.localBrokerIpText);
+        final EditText remoteBrokerIpText = (EditText) promptView.findViewById(R.id.remoteBrokerIpText);
+        if (defs.length > 0) {
+            localBrokerIpText.setText(defs[0]);
+            remoteBrokerIpText.setText(defs[0]);
+        }
+
+        final EditText localWorkerPortText = (EditText) promptView.findViewById(R.id.localWorkerPortText);
+        final EditText remoteClientPortText = (EditText) promptView.findViewById(R.id.remoteClientPortText);
+
+        // setup a dialog window
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        listener.inputDone(localBrokerIpText.getText().toString(),
+                                        Integer.parseInt(localWorkerPortText.getText().toString()),
+                                        remoteBrokerIpText.getText().toString(),
+                                        Integer.parseInt(remoteClientPortText.getText().toString()));
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
+    /**
+     * open a dialog to prompt text
+     *
+     * @param c
+     * @param listener
+     */
     public static void showInputDialog(Context c, final InputDialogListener listener, String... defs) {
         // get prompts.xml view
         LayoutInflater layoutInflater = LayoutInflater.from(c);
@@ -76,5 +121,6 @@ public class UITools {
 
     public interface InputDialogListener {
         void inputDone(String resultStr);
+        void inputDone(String localBrokerIpText, int localWorkerPort, String remoteBrokerIp, int remoteClientPort);
     }
 }
