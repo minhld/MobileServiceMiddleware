@@ -2,22 +2,24 @@ package com.usu.mobileservice.g2gapp;
 
 import android.net.wifi.WifiInfo;
 import android.net.wifi.p2p.WifiP2pInfo;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.usu.connection.utils.DevUtils;
 import com.usu.connection.wfd.WFDSupporter;
 import com.usu.connection.wifi.WiFiSupporter;
 import com.usu.tinyservice.messages.binary.ResponseMessage;
+import com.usu.tinyservice.network.Bridge;
 import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
@@ -40,18 +42,25 @@ public class VideoShareActivity extends AppCompatActivity {
     @BindView(R.id.getDirectInfoBtn)
     Button getDirectInfoBtn;
 
-    // ------ SECOND BUTTON ROW ------
     @BindView(R.id.startBrokerBtn)
     Button startBrokerBtn;
 
     @BindView(R.id.startWorkerBtn)
     Button startWorkerBtn;
 
+    // ------ SECOND BUTTON ROW ------
+
     @BindView(R.id.startClientBtn)
     Button startClientBtn;
 
     @BindView(R.id.sendWifiDirectBtn)
     Button sendWifiDirectBtn;
+
+    @BindView(R.id.startWFDBridgeBtn)
+    Button startWFDBridgeBtn;
+
+    @BindView(R.id.startWiFiBridgeBtn)
+    Button startWiFiBridgeBtn;
 
     // ------ THIRD BUTTON ROW ------
 //    @BindView(R.id.searchWiFiBtn)
@@ -125,7 +134,7 @@ public class VideoShareActivity extends AppCompatActivity {
                 }
                 case DevUtils.MESSAGE_INFO: {
                     UITools.printLog(VideoShareActivity.this, infoText, msg.obj);
-                    // DevUtils.printLog(MainActivity.this, infoText, msg.obj);
+                    // DevUtils.printLog(VideoShareActivity.this, infoText, msg.obj);
                     break;
                 }
             }
@@ -151,22 +160,6 @@ public class VideoShareActivity extends AppCompatActivity {
         // set up the main handler
         NetUtils.setMainHandler(mainUiHandler);
 
-//        // ------ Prepared for Original WiFi ------
-//        orgWifiBroader = new WiFiManager(this, infoText);
-//        orgWifiBroader.setSocketHandler(mainUiHandler);
-//        orgWifiBroader.setmWifiScanListener(new WiFiManager.WiFiScanListener() {
-//            @Override
-//            public void listReceived(List<ScanResult> mScanResults) {
-//                networkListAdapter.clear();
-//                networkListAdapter.addAll(mScanResults);
-//                networkListAdapter.notifyDataSetChanged();
-//            }
-//        });
-//
-//        // WiFi network list
-//        networkListAdapter = new WiFiListAdapter(this, R.layout.row_wifi, orgWifiBroader);
-//        wifiList.setAdapter(networkListAdapter);
-
         // ------ FIRST BUTTON ROW ------
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,7 +182,6 @@ public class VideoShareActivity extends AppCompatActivity {
             }
         });
 
-        // ------ SECOND BUTTON ROW ------
         startBrokerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,6 +195,8 @@ public class VideoShareActivity extends AppCompatActivity {
                 initWorker(brokerIp);
             }
         });
+
+        // ------ SECOND BUTTON ROW ------
 
         startClientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,13 +212,50 @@ public class VideoShareActivity extends AppCompatActivity {
             }
         });
 
+        startWFDBridgeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String routerIp = wfSupport.getRouterWifiInfo(VideoShareActivity.this);
+
+                UITools.showInputDialog2(VideoShareActivity.this, new UITools.InputDialogListener() {
+                    @Override
+                    public void inputDone(String resultStr) { }
+
+                    @Override
+                    public void inputDone(String localBrokerIp, int localWorkerPort,
+                                          String remoteBrokerIp, int remoteClientPort) {
+                        // string
+                        new Bridge(localBrokerIp, localWorkerPort, remoteBrokerIp, remoteClientPort);
+                    }
+                }, routerIp);
+            }
+        });
+
+        startWiFiBridgeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String routerIp = wfSupport.getRouterWifiInfo(VideoShareActivity.this);
+
+                UITools.showInputDialog2(VideoShareActivity.this, new UITools.InputDialogListener() {
+                    @Override
+                    public void inputDone(String resultStr) { }
+                    @Override
+                    public void inputDone(String localBrokerIp, int localWorkerPort,
+                                          String remoteBrokerIp, int remoteClientPort) {
+                        // string
+                        new Bridge(localBrokerIp, localWorkerPort, remoteBrokerIp, remoteClientPort);
+                    }
+                }, routerIp);
+            }
+        });
+
         // ------ THIRD BUTTON ROW ------
 //        searchWiFiBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
 //                        checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    wfSupport.requestPermission(MainActivity.this);
+//                    wfSupport.requestPermission(VideoShareActivity.this);
 //                } else {
 //                    // search for Wifi network list
 //                    wfSupport.getWifiConnections();
@@ -261,6 +292,12 @@ public class VideoShareActivity extends AppCompatActivity {
                         // string
                         String brokerIp = resultStr;
                         new ServiceAWorker(brokerIp);
+                    }
+
+                    @Override
+                    public void inputDone(String localBrokerIp, int localWorkerPort,
+                                          String remoteBrokerIp, int remoteClientPort) {
+                        // empty
                     }
                 }, routerIp);
             }
@@ -316,10 +353,10 @@ public class VideoShareActivity extends AppCompatActivity {
                     String msg = (String) resp.outParam.values[0];
                     UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + client.client.clientId + "] Error " + msg);
                 } else if (resp.functionName.equals("greeting")) {
-                    String[] msgs = (String[]) resp.outParam.values;
+                    java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: " + msgs[0]);
                 } else if (resp.functionName.equals("getFileList2")) {
-                    String[] files = (String[]) resp.outParam.values;
+                    java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: ");
                     for (int i = 0; i < files.length; i++) {
                         UITools.printLog(VideoShareActivity.this, infoText, "\t File: " + files[i]);
@@ -339,10 +376,10 @@ public class VideoShareActivity extends AppCompatActivity {
                     String msg = (String) resp.outParam.values[0];
                     UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Error " + msg);
                 } else if (resp.functionName.equals("greeting")) {
-                    String[] msgs = (String[]) resp.outParam.values;
+                    java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: " + msgs[0]);
                 } else if (resp.functionName.equals("getFileList2")) {
-                    String[] files = (String[]) resp.outParam.values;
+                    java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
                     for (int i = 0; i < files.length; i++) {
                         UITools.printLog(VideoShareActivity.this, infoText, "\t File: " + files[i]);
