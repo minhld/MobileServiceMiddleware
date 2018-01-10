@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.usu.connection.utils.DevUtils;
 import com.usu.connection.wfd.WFDSupporter;
@@ -144,7 +143,7 @@ public class VideoShareActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_video);
 
         ButterKnife.bind(this);
         infoText.setMovementMethod(new ScrollingMovementMethod());
