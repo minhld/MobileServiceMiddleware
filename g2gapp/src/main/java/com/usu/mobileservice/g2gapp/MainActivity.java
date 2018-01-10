@@ -374,10 +374,10 @@ public class MainActivity extends AppCompatActivity {
                 if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
                     // a denied message from the Broker
                     String msg = (String) resp.outParam.values[0];
-                    UITools.printLog(MainActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Error " + msg);
+                    UITools.printLog(MainActivity.this, infoText, "Error " + msg);
                 } else if (resp.functionName.equals("greeting")) {
                     java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
-                    UITools.printLog(MainActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: " + msgs[0]);
+                    UITools.printLog(MainActivity.this, infoText, msgs[0]);
                 } else if (resp.functionName.equals("getFolderList")) {
                     java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(MainActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
