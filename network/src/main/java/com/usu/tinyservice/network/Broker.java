@@ -71,11 +71,12 @@ public class Broker extends Thread {
         			"Worker Port " + this.workerPort);
         
         // Queue of available workers
-        funcMap = new HashMap<String, String>();
+        funcMap = new HashMap<>();
 
 
         // INFINITE LOOP TO LISTEN TO MESSAGES FROM 
         byte[] request, reply;
+        String clientId = "", idChain = "";
         while (!Thread.currentThread().isInterrupted()) {
             ZMQ.Poller items = new ZMQ.Poller(2);
             items.register(backend, ZMQ.Poller.POLLIN);
@@ -115,10 +116,22 @@ public class Broker extends Thread {
                 	// skip the last frame
                     backend.recv();
                 } else if (workerInfo.equals(NetUtils.INFO_WORKER_FAILED)) {
-                	NetUtils.printX("[Broker-" + brokerId + "] Worker [" + workerId + "] Has Problem.");
+                    String msg = "Worker [" + workerId + "] Has Problem.";
+                	NetUtils.printX("[Broker-" + brokerId + "] " + msg);
                 	
                     // skip the last frame
                     backend.recv();
+
+                    // forward the error back to the Client
+
+                    // return the result from worker
+                    frontend.sendMore(clientId);
+                    frontend.sendMore(NetUtils.DELIMITER);
+                    frontend.sendMore(idChain);
+                    frontend.sendMore(NetUtils.DELIMITER);
+                    frontend.sendMore(NetUtils.BROKER_INFO);
+                    frontend.sendMore(NetUtils.DELIMITER);
+                    frontend.send(NetUtils.createMessage(NetUtils.INFO_WORKER_FAILED));
                 } else {
                 	// WORKER SUCCESSFULLY DONE
                     // WORKER has completed the task, returned the results
@@ -131,8 +144,8 @@ public class Broker extends Thread {
                     
                     // get ID chain (index 0) & client ID (index 1) 
                     String[] idList = NetUtils.getLastClientId(workerInfo);
-                    String clientId = idList[0];
-                    String idChain = idList[1];
+                    clientId = idList[0];
+                    idChain = idList[1];
                     
                     // get LAST FRAME - main result from worker
                     reply = backend.recv();
@@ -154,13 +167,13 @@ public class Broker extends Thread {
             if (items.pollin(1)) {
                 // now get next client request, route to LRU worker
                 // get the ID of the sending client, where it connect to this broker 
-                String clientId = frontend.recvStr();
+                clientId = frontend.recvStr();
 
                 // skip the delimiter
                 frontend.recv();
                 
                 // get the chain of IDs of the requesting clients
-                String idChain = frontend.recvStr();
+                idChain = frontend.recvStr();
                 
                 // skip the delimiter
                 frontend.recv();

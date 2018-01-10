@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (resp.functionName.equals("greeting")) {
                     java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(MainActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: " + msgs[0]);
-                } else if (resp.functionName.equals("getFileList2")) {
+                } else if (resp.functionName.equals("getFolderList")) {
                     java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(MainActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: ");
                     for (int i = 0; i < files.length; i++) {
@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (resp.functionName.equals("greeting")) {
                     java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(MainActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: " + msgs[0]);
-                } else if (resp.functionName.equals("getFileList2")) {
+                } else if (resp.functionName.equals("getFolderList")) {
                     java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
                     UITools.printLog(MainActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
                     for (int i = 0; i < files.length; i++) {
