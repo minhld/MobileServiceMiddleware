@@ -224,7 +224,7 @@ public class MobileServiceMultiCreator {
 		String vFullType = e.asType().toString();
 		// String vType = getOnlyName(vFullType).replace("[]", "");
 		String vType = vFullType.replace("[]", "");
-		
+
 		// assign value from a parameter to an array
 		inParamsStr += "        // for variable " + "\"" + vName + "\"\n";
 		inParamsStr += "        " + vType + "[] " + vNames + " = new " + vType + "[reqMsg.inParams[" + idx + "].values.length];\n";

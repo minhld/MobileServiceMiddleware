@@ -18,8 +18,8 @@ import java.io.File;
 public class ServiceB {
 
     @ServiceMethod(syncMode = SyncMode.Async)
-    public String[] sendData(byte[] msg) {
-        return new String[] { "receive message: ", Integer.toString(msg.length) };
+    public String[] sendData(String msg) {
+        return new String[] { "receive message: ", Integer.toString(msg.length()) };
     }
 
     @ServiceMethod(

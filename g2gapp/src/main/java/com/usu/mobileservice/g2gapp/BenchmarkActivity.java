@@ -231,7 +231,7 @@ public class BenchmarkActivity extends AppCompatActivity {
                 // start the clock to measure time
                 startTime = System.currentTimeMillis();
 
-                client.sendData(data);
+                client.sendData(new String(data));
             }
         });
 
@@ -374,7 +374,7 @@ public class BenchmarkActivity extends AppCompatActivity {
                 if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
                     // a denied message from the Broker
                     String msg = (String) resp.outParam.values[0];
-                    UITools.printLog(BenchmarkActivity.this, infoText, "Error " + msg);
+                    UITools.printLog(BenchmarkActivity.this, infoText, " Error " + msg);
                 } else if (resp.functionName.equals("sendData")) {
                     String[] msgs = (String[]) resp.outParam.values;
                     long totalTime = System.currentTimeMillis();
