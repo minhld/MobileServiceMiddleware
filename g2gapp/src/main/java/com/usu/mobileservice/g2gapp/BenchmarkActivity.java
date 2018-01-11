@@ -377,7 +377,7 @@ public class BenchmarkActivity extends AppCompatActivity {
                     UITools.printLog(BenchmarkActivity.this, infoText, " Error " + msg);
                 } else if (resp.functionName.equals("sendData")) {
                     String[] msgs = (String[]) resp.outParam.values;
-                    long totalTime = System.currentTimeMillis();
+                    long totalTime = System.currentTimeMillis() - startTime;
                     UITools.printLog(BenchmarkActivity.this, infoText, msgs[0] + " " + msgs[1] + " in " + totalTime + "ms");
                 } else if (resp.functionName.equals("getFolderList")) {
                     String[] files = (String[]) resp.outParam.values;

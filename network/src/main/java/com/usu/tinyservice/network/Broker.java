@@ -21,7 +21,7 @@ public class Broker extends Thread {
     // private static ZMQ.Socket backend;
     // private AckServerListener ackServer;
 
-    long startTime = 0;
+    // long startTime = 0;
     // static long startRLRequestTime = 0;
 
     public Broker() {
@@ -77,6 +77,8 @@ public class Broker extends Thread {
         // INFINITE LOOP TO LISTEN TO MESSAGES FROM 
         byte[] request, reply;
         String clientId = "", idChain = "";
+        long startForwardTime = 0, durForwardTime = 0;
+
         while (!Thread.currentThread().isInterrupted()) {
             ZMQ.Poller items = new ZMQ.Poller(2);
             items.register(backend, ZMQ.Poller.POLLIN);
@@ -135,7 +137,10 @@ public class Broker extends Thread {
                 } else {
                 	// WORKER SUCCESSFULLY DONE
                     // WORKER has completed the task, returned the results
-                    startTime = System.currentTimeMillis();
+
+                    // startTime = System.currentTimeMillis();
+                    // duration from receiving to sending a message
+                    durForwardTime = System.currentTimeMillis() - startForwardTime;
 
                     String funcName = backend.recvStr();
                     
@@ -159,7 +164,7 @@ public class Broker extends Thread {
                     frontend.sendMore(NetUtils.DELIMITER);
                     frontend.send(reply);
                     
-                    NetUtils.printX("[Broker-" + brokerId + "] Forward To Client [" + clientId + "]");
+                    NetUtils.printX("[Broker-" + brokerId + "] Forward To Client [" + clientId + "] (" + durForwardTime + "ms)");
                 } 
             }
 
@@ -226,7 +231,10 @@ public class Broker extends Thread {
                 	NetUtils.printX("[Broker-" + brokerId + "] " + serviceList);
                 } else {
                 	// WORKER AVAILABLE
-                	
+
+                    // get the time of receiving message
+                    startForwardTime = System.currentTimeMillis();
+
                 	// update the ID chain with the new client ID 
                 	idChain = NetUtils.concatIds(idChain, clientId);
                 	
