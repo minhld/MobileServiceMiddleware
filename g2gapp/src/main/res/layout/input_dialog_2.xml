@@ -18,6 +18,12 @@
         android:layout_height="50dp"
         android:orientation="horizontal">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="45dp"
+            android:text="Local Broker"/>
+
         <EditText
             android:id="@+id/localBrokerIpText"
             android:layout_width="0dp"
@@ -46,6 +52,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="45dp"
+            android:text="Remote Broker"/>
 
         <EditText
             android:id="@+id/remoteBrokerIpText"

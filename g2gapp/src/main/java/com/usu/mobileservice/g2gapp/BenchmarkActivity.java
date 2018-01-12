@@ -336,11 +336,16 @@ public class BenchmarkActivity extends AppCompatActivity {
         sendWiFiDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (wifiClient == null) {
-                    UITools.printMsg(BenchmarkActivity.this, "Client has not started yet.");
-                    return;
+                int packageSize = Integer.parseInt(packageSizeText.getText().toString());
+                byte[] data = new byte[packageSize * 1024];
+                for (int i = 0; i < data.length; i++) {
+                    data[i] = (byte) (Math.random() * 127);
                 }
-                // wifiClient.greeting("send " + wifiClient.client.clientId);
+
+                // start the clock to measure time
+                startTime = System.currentTimeMillis();
+
+                wifiClient.sendData(new String(data));
             }
         });
 
@@ -391,26 +396,27 @@ public class BenchmarkActivity extends AppCompatActivity {
     }
 
     void initWiFiClient(String brokerIp) {
-//        wifiClient = new ServiceAClient(brokerIp, new ReceiveListener() {
-//            @Override
-//            public void dataReceived(String idChain, String funcName, byte[] data) {
-//                ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
-//                if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
-//                    // a denied message from the Broker
-//                    String msg = (String) resp.outParam.values[0];
-//                    UITools.printLog(BenchmarkActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Error " + msg);
-//                } else if (resp.functionName.equals("greeting")) {
-//                    String[] msgs = (String[]) resp.outParam.values;
-//                    UITools.printLog(BenchmarkActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: " + msgs[0]);
-//                } else if (resp.functionName.equals("getFileList2")) {
-//                    String[] files = (String[]) resp.outParam.values;
-//                    UITools.printLog(BenchmarkActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
-//                    for (int i = 0; i < files.length; i++) {
-//                        UITools.printLog(BenchmarkActivity.this, infoText, "\t File: " + files[i]);
-//                    }
-//                }
-//            }
-//        });
+        wifiClient = new ServiceBClient(brokerIp, new ReceiveListener() {
+            @Override
+            public void dataReceived(String idChain, String funcName, byte[] data) {
+                ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
+                if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
+                    // a denied message from the Broker
+                    String msg = (String) resp.outParam.values[0];
+                    UITools.printLog(BenchmarkActivity.this, infoText, " Error " + msg);
+                } else if (resp.functionName.equals("sendData")) {
+                    String[] msgs = (String[]) resp.outParam.values;
+                    long totalTime = System.currentTimeMillis() - startTime;
+                    UITools.printLog(BenchmarkActivity.this, infoText, msgs[0] + " " + msgs[1] + " in " + totalTime + "ms");
+                } else if (resp.functionName.equals("getFolderList")) {
+                    String[] files = (String[]) resp.outParam.values;
+                    UITools.printLog(BenchmarkActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
+                    for (int i = 0; i < files.length; i++) {
+                        UITools.printLog(BenchmarkActivity.this, infoText, "\t File: " + files[i]);
+                    }
+                }
+            }
+        });
     }
 
     void initWorker(String brokerIp) {
