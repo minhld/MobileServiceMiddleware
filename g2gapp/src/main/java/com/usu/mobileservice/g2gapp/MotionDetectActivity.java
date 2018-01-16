@@ -11,6 +11,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -108,6 +109,9 @@ public class MotionDetectActivity extends AppCompatActivity {
 
     @BindView(R.id.wifiList)
     ListView wifiList;
+
+    @BindView(R.id.viewerImg)
+    ImageView viewerImg;
 
     @BindView(R.id.infoText)
     TextView infoText;
