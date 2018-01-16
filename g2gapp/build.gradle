@@ -29,6 +29,7 @@ dependencies {
     compile project(':annotations')
     annotationProcessor project(':processors')
     compile project(':network')
+    implementation project(':OpenCVLibrary320')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
