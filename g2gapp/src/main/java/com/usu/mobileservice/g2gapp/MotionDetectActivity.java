@@ -2,11 +2,11 @@ package com.usu.mobileservice.g2gapp;
 
 import android.net.wifi.WifiInfo;
 import android.net.wifi.p2p.WifiP2pInfo;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -23,13 +23,13 @@ import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
 
-import com.usu.mobileservice.g2gapp.ServiceAClient;
-import com.usu.mobileservice.g2gapp.ServiceAWorker;
+import com.usu.mobileservice.g2gapp.ServiceBClient;
+import com.usu.mobileservice.g2gapp.ServiceBWorker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class VideoShareActivity extends AppCompatActivity {
+public class MotionDetectActivity extends AppCompatActivity {
 
     // ------ FIRST BUTTON ROW ------
     @BindView(R.id.createGroupBtn)
@@ -92,6 +92,17 @@ public class VideoShareActivity extends AppCompatActivity {
 
     // ------ FIFTH LIST ROW ------
 
+    @BindView(R.id.packageSizeText)
+    EditText packageSizeText;
+
+//    @BindView(R.id.workerPortText)
+//    EditText workerPortText;
+//
+//    @BindView(R.id.clientPortText)
+//    EditText clientPortText;
+
+    // ------ SIXTH LIST ROW ------
+
     @BindView(R.id.deviceList)
     ListView deviceList;
 
@@ -104,7 +115,7 @@ public class VideoShareActivity extends AppCompatActivity {
     WFDSupporter wfdSupporter;
     WiFiSupporter wfSupport;
 
-    ServiceAClient client, wifiClient;
+    ServiceBClient client, wifiClient;
 
     String brokerIp, wifiBrokerIp;
 
@@ -115,14 +126,14 @@ public class VideoShareActivity extends AppCompatActivity {
                 case DevUtils.MESSAGE_GO_CONNECTED: {
                     WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
                     brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
-                    UITools.printLog(VideoShareActivity.this, infoText, "Server " + brokerIp);
+                    UITools.printLog(MotionDetectActivity.this, infoText, "Server " + brokerIp);
                     break;
                 }
                 case DevUtils.MESSAGE_CLIENT_CONNECTED: {
                     WifiP2pInfo p2pInfo = (WifiP2pInfo) msg.obj;
                     // initWorker(p2pInfo.groupOwnerAddress.getHostAddress());
                     brokerIp = p2pInfo.groupOwnerAddress.getHostAddress();
-                    UITools.printLog(VideoShareActivity.this, infoText, brokerIp);
+                    UITools.printLog(MotionDetectActivity.this, infoText, brokerIp);
                     break;
                 }
                 case DevUtils.MESSAGE_WIFI_DETECTED: {
@@ -132,18 +143,20 @@ public class VideoShareActivity extends AppCompatActivity {
                     break;
                 }
                 case DevUtils.MESSAGE_INFO: {
-                    UITools.printLog(VideoShareActivity.this, infoText, msg.obj);
-                    // DevUtils.printLog(VideoShareActivity.this, infoText, msg.obj);
+                    UITools.printLog(MotionDetectActivity.this, infoText, msg.obj);
+                    // DevUtils.printLog(MainActivity.this, infoText, msg.obj);
                     break;
                 }
             }
         }
     };
 
+    long startTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video);
+        setContentView(R.layout.activity_motion);
 
         ButterKnife.bind(this);
         infoText.setMovementMethod(new ScrollingMovementMethod());
@@ -207,16 +220,25 @@ public class VideoShareActivity extends AppCompatActivity {
         sendWifiDirectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.greeting("send " + client.client.clientId);
+                int packageSize = Integer.parseInt(packageSizeText.getText().toString());
+                byte[] data = new byte[packageSize * 1024];
+                for (int i = 0; i < data.length; i++) {
+                    data[i] = (byte) (Math.random() * 127);
+                }
+
+                // start the clock to measure time
+                startTime = System.currentTimeMillis();
+
+                client.sendData(new String(data));
             }
         });
 
         startWFDBridgeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String routerIp = wfSupport.getRouterWifiInfo(VideoShareActivity.this);
+                String routerIp = wfSupport.getRouterWifiInfo(MotionDetectActivity.this);
 
-                UITools.showInputDialog2(VideoShareActivity.this, new UITools.InputDialogListener() {
+                UITools.showInputDialog2(MotionDetectActivity.this, new UITools.InputDialogListener() {
                     @Override
                     public void inputDone(String resultStr) { }
 
@@ -233,9 +255,9 @@ public class VideoShareActivity extends AppCompatActivity {
         startWiFiBridgeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String routerIp = wfSupport.getRouterWifiInfo(VideoShareActivity.this);
+                String routerIp = wfSupport.getRouterWifiInfo(MotionDetectActivity.this);
 
-                UITools.showInputDialog2(VideoShareActivity.this, new UITools.InputDialogListener() {
+                UITools.showInputDialog2(MotionDetectActivity.this, new UITools.InputDialogListener() {
                     @Override
                     public void inputDone(String resultStr) { }
                     @Override
@@ -254,7 +276,7 @@ public class VideoShareActivity extends AppCompatActivity {
 //            public void onClick(View v) {
 //                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
 //                        checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    wfSupport.requestPermission(VideoShareActivity.this);
+//                    wfSupport.requestPermission(MainActivity.this);
 //                } else {
 //                    // search for Wifi network list
 //                    wfSupport.getWifiConnections();
@@ -265,7 +287,7 @@ public class VideoShareActivity extends AppCompatActivity {
         getWiFiInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wfSupport.getWifiInfo(VideoShareActivity.this);
+                wfSupport.getWifiInfo(MotionDetectActivity.this);
             }
         });
 
@@ -283,14 +305,14 @@ public class VideoShareActivity extends AppCompatActivity {
         startWiFiWorkerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String routerIp = wfSupport.getRouterWifiInfo(VideoShareActivity.this);
+                String routerIp = wfSupport.getRouterWifiInfo(MotionDetectActivity.this);
 
-                UITools.showInputDialog(VideoShareActivity.this, new UITools.InputDialogListener() {
+                UITools.showInputDialog(MotionDetectActivity.this, new UITools.InputDialogListener() {
                     @Override
                     public void inputDone(String resultStr) {
                         // string
                         String brokerIp = resultStr;
-                        new ServiceAWorker(brokerIp);
+                        new ServiceBWorker(brokerIp);
                     }
 
                     @Override
@@ -312,11 +334,16 @@ public class VideoShareActivity extends AppCompatActivity {
         sendWiFiDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (wifiClient == null) {
-                    UITools.printMsg(VideoShareActivity.this, "Client has not started yet.");
-                    return;
+                int packageSize = Integer.parseInt(packageSizeText.getText().toString());
+                byte[] data = new byte[packageSize * 1024];
+                for (int i = 0; i < data.length; i++) {
+                    data[i] = (byte) (Math.random() * 127);
                 }
-                wifiClient.greeting("send " + wifiClient.client.clientId);
+
+                // start the clock to measure time
+                startTime = System.currentTimeMillis();
+
+                wifiClient.sendData(new String(data));
             }
         });
 
@@ -343,22 +370,23 @@ public class VideoShareActivity extends AppCompatActivity {
     }
 
     void initClient(String brokerIp) {
-        client = new ServiceAClient(brokerIp, new ReceiveListener() {
+        client = new ServiceBClient(brokerIp, new ReceiveListener() {
             @Override
             public void dataReceived(String idChain, String funcName, byte[] data) {
                 ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
                 if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
                     // a denied message from the Broker
                     String msg = (String) resp.outParam.values[0];
-                    UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + client.client.clientId + "] Error " + msg);
-                } else if (resp.functionName.equals("greeting")) {
-                    java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
-                    UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: " + msgs[0]);
-                } else if (resp.functionName.equals("getFileList2")) {
-                    java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
-                    UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: ");
+                    UITools.printLog(MotionDetectActivity.this, infoText, " Error " + msg);
+                } else if (resp.functionName.equals("sendData")) {
+                    String[] msgs = (String[]) resp.outParam.values;
+                    long totalTime = System.currentTimeMillis() - startTime;
+                    UITools.printLog(MotionDetectActivity.this, infoText, msgs[0] + " " + msgs[1] + " in " + totalTime + "ms");
+                } else if (resp.functionName.equals("getFolderList")) {
+                    String[] files = (String[]) resp.outParam.values;
+                    UITools.printLog(MotionDetectActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: ");
                     for (int i = 0; i < files.length; i++) {
-                        UITools.printLog(VideoShareActivity.this, infoText, "\t File: " + files[i]);
+                        UITools.printLog(MotionDetectActivity.this, infoText, "\t File: " + files[i]);
                     }
                 }
             }
@@ -366,22 +394,23 @@ public class VideoShareActivity extends AppCompatActivity {
     }
 
     void initWiFiClient(String brokerIp) {
-        wifiClient = new ServiceAClient(brokerIp, new ReceiveListener() {
+        wifiClient = new ServiceBClient(brokerIp, new ReceiveListener() {
             @Override
             public void dataReceived(String idChain, String funcName, byte[] data) {
                 ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
                 if (resp.functionName.equals(NetUtils.BROKER_INFO)) {
                     // a denied message from the Broker
                     String msg = (String) resp.outParam.values[0];
-                    UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Error " + msg);
-                } else if (resp.functionName.equals("greeting")) {
-                    java.lang.String[] msgs = (java.lang.String[]) resp.outParam.values;
-                    UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: " + msgs[0]);
-                } else if (resp.functionName.equals("getFileList2")) {
-                    java.lang.String[] files = (java.lang.String[]) resp.outParam.values;
-                    UITools.printLog(VideoShareActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
+                    UITools.printLog(MotionDetectActivity.this, infoText, " Error " + msg);
+                } else if (resp.functionName.equals("sendData")) {
+                    String[] msgs = (String[]) resp.outParam.values;
+                    long totalTime = System.currentTimeMillis() - startTime;
+                    UITools.printLog(MotionDetectActivity.this, infoText, msgs[0] + " " + msgs[1] + " in " + totalTime + "ms");
+                } else if (resp.functionName.equals("getFolderList")) {
+                    String[] files = (String[]) resp.outParam.values;
+                    UITools.printLog(MotionDetectActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
                     for (int i = 0; i < files.length; i++) {
-                        UITools.printLog(VideoShareActivity.this, infoText, "\t File: " + files[i]);
+                        UITools.printLog(MotionDetectActivity.this, infoText, "\t File: " + files[i]);
                     }
                 }
             }
@@ -389,6 +418,6 @@ public class VideoShareActivity extends AppCompatActivity {
     }
 
     void initWorker(String brokerIp) {
-        new ServiceAWorker(brokerIp);
+        new ServiceBWorker(brokerIp);
     }
 }
