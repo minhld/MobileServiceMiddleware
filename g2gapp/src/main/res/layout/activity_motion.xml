@@ -43,11 +43,18 @@
             android:layout_toEndOf="@+id/createGroupBtn"
             android:layout_marginBottom="0dp" />
 
+        <!--
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:id="@+id/viewerImg"/>
+        -->
+        <org.opencv.android.JavaCameraView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/viewerImg" />
     </LinearLayout>
 
     <LinearLayout

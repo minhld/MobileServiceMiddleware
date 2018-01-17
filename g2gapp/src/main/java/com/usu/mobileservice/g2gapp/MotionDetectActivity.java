@@ -24,8 +24,8 @@ import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
 
-import com.usu.mobileservice.g2gapp.ServiceBClient;
-import com.usu.mobileservice.g2gapp.ServiceBWorker;
+import com.usu.mobileservice.g2gapp.ServiceCClient;
+import com.usu.mobileservice.g2gapp.ServiceCWorker;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,7 +111,7 @@ public class MotionDetectActivity extends AppCompatActivity {
     ListView wifiList;
 
     @BindView(R.id.viewerImg)
-    ImageView viewerImg;
+    org.opencv.android.JavaCameraView viewerImg;
 
     @BindView(R.id.infoText)
     TextView infoText;
@@ -119,7 +119,7 @@ public class MotionDetectActivity extends AppCompatActivity {
     WFDSupporter wfdSupporter;
     WiFiSupporter wfSupport;
 
-    ServiceBClient client, wifiClient;
+    ServiceCClient client, wifiClient;
 
     String brokerIp, wifiBrokerIp;
 
@@ -233,7 +233,7 @@ public class MotionDetectActivity extends AppCompatActivity {
                 // start the clock to measure time
                 startTime = System.currentTimeMillis();
 
-                client.sendData(new String(data));
+                client.resolveImage(null, null);
             }
         });
 
@@ -274,20 +274,6 @@ public class MotionDetectActivity extends AppCompatActivity {
             }
         });
 
-        // ------ THIRD BUTTON ROW ------
-//        searchWiFiBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-//                        checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    wfSupport.requestPermission(MainActivity.this);
-//                } else {
-//                    // search for Wifi network list
-//                    wfSupport.getWifiConnections();
-//                }
-//            }
-//        });
-
         getWiFiInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -316,7 +302,7 @@ public class MotionDetectActivity extends AppCompatActivity {
                     public void inputDone(String resultStr) {
                         // string
                         String brokerIp = resultStr;
-                        new ServiceBWorker(brokerIp);
+                        new ServiceCWorker(brokerIp);
                     }
 
                     @Override
@@ -347,12 +333,14 @@ public class MotionDetectActivity extends AppCompatActivity {
                 // start the clock to measure time
                 startTime = System.currentTimeMillis();
 
-                wifiClient.sendData(new String(data));
+                wifiClient.resolveImage(null, null);
             }
         });
 
         // grant permission - for Android 6.0 and higher
         DevUtils.grandWritePermission(this);
+
+
     }
 
     @Override
@@ -374,7 +362,7 @@ public class MotionDetectActivity extends AppCompatActivity {
     }
 
     void initClient(String brokerIp) {
-        client = new ServiceBClient(brokerIp, new ReceiveListener() {
+        client = new ServiceCClient(brokerIp, new ReceiveListener() {
             @Override
             public void dataReceived(String idChain, String funcName, byte[] data) {
                 ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
@@ -382,23 +370,17 @@ public class MotionDetectActivity extends AppCompatActivity {
                     // a denied message from the Broker
                     String msg = (String) resp.outParam.values[0];
                     UITools.printLog(MotionDetectActivity.this, infoText, " Error " + msg);
-                } else if (resp.functionName.equals("sendData")) {
+                } else if (resp.functionName.equals("resolveImage")) {
                     String[] msgs = (String[]) resp.outParam.values;
                     long totalTime = System.currentTimeMillis() - startTime;
                     UITools.printLog(MotionDetectActivity.this, infoText, msgs[0] + " " + msgs[1] + " in " + totalTime + "ms");
-                } else if (resp.functionName.equals("getFolderList")) {
-                    String[] files = (String[]) resp.outParam.values;
-                    UITools.printLog(MotionDetectActivity.this, infoText, "[Client-" + client.client.clientId + "] Received: ");
-                    for (int i = 0; i < files.length; i++) {
-                        UITools.printLog(MotionDetectActivity.this, infoText, "\t File: " + files[i]);
-                    }
                 }
             }
         });
     }
 
     void initWiFiClient(String brokerIp) {
-        wifiClient = new ServiceBClient(brokerIp, new ReceiveListener() {
+        wifiClient = new ServiceCClient(brokerIp, new ReceiveListener() {
             @Override
             public void dataReceived(String idChain, String funcName, byte[] data) {
                 ResponseMessage resp = (ResponseMessage) NetUtils.deserialize(data);
@@ -406,22 +388,16 @@ public class MotionDetectActivity extends AppCompatActivity {
                     // a denied message from the Broker
                     String msg = (String) resp.outParam.values[0];
                     UITools.printLog(MotionDetectActivity.this, infoText, " Error " + msg);
-                } else if (resp.functionName.equals("sendData")) {
+                } else if (resp.functionName.equals("resolveImage")) {
                     String[] msgs = (String[]) resp.outParam.values;
                     long totalTime = System.currentTimeMillis() - startTime;
                     UITools.printLog(MotionDetectActivity.this, infoText, msgs[0] + " " + msgs[1] + " in " + totalTime + "ms");
-                } else if (resp.functionName.equals("getFolderList")) {
-                    String[] files = (String[]) resp.outParam.values;
-                    UITools.printLog(MotionDetectActivity.this, infoText, "[Client-" + wifiClient.client.clientId + "] Received: ");
-                    for (int i = 0; i < files.length; i++) {
-                        UITools.printLog(MotionDetectActivity.this, infoText, "\t File: " + files[i]);
-                    }
                 }
             }
         });
     }
 
     void initWorker(String brokerIp) {
-        new ServiceBWorker(brokerIp);
+        new ServiceCWorker(brokerIp);
     }
 }

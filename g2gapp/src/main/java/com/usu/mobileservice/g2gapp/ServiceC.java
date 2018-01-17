@@ -6,6 +6,8 @@ import com.usu.servicemiddleware.annotations.ServiceMethod;
 import com.usu.servicemiddleware.annotations.SyncMode;
 import com.usu.servicemiddleware.annotations.TransmitType;
 
+import org.opencv.core.Mat;
+
 import java.io.File;
 
 /**
@@ -18,20 +20,8 @@ import java.io.File;
 public class ServiceC {
 
     @ServiceMethod(syncMode = SyncMode.Async)
-    public String[] sendData(String msg) {
-        return new String[] { "receive message: ", Integer.toString(msg.length()) };
-    }
-
-    @ServiceMethod(
-            syncMode = SyncMode.Async,
-            suffix = "2")
-    public String[] getFolderList(String path) {
-        File folder = new File(path);
-        File[] files = folder.listFiles();
-        String[] res = new String[files.length];
-        for (int i = 0; i < files.length; i++) {
-            res[i] = files[i].getAbsolutePath();
-        }
-        return res;
+    public Integer[] resolveImage(byte[] img1, byte[] img2) {
+        Mat orgMat = new Mat();
+        return null;
     }
 }
