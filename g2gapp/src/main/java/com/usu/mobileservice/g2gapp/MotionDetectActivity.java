@@ -386,6 +386,41 @@ public class MotionDetectActivity extends AppCompatActivity {
         }
     }
 
+    class CvCameraViewListener2X implements CameraBridgeViewBase.CvCameraViewListener2 {
+        @Override
+        public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+            Mat orgMat = inputFrame.rgba();
+            client.resolveImage(orgMat, orgMat);
+            return orgMat;
+        }
+
+        @Override
+        public void onCameraViewStarted(int width, int height) {
+
+        }
+
+        @Override
+        public void onCameraViewStopped() {
+
+        }
+    }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS: {
+                    // Log.i(TAG, "OpenCV loaded successfully");
+                    viewerImg.enableView();
+                    break;
+                } default: {
+                    super.onManagerConnected(status);
+                    break;
+                }
+            }
+        }
+    };
+
     void initClient(String brokerIp) {
         client = new ServiceCClient(brokerIp, new ReceiveListener() {
             @Override
@@ -425,38 +460,4 @@ public class MotionDetectActivity extends AppCompatActivity {
     void initWorker(String brokerIp) {
         new ServiceCWorker(brokerIp);
     }
-
-    class CvCameraViewListener2X implements CameraBridgeViewBase.CvCameraViewListener2 {
-        @Override
-        public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-            return inputFrame.rgba();
-        }
-
-        @Override
-        public void onCameraViewStarted(int width, int height) {
-
-        }
-
-        @Override
-        public void onCameraViewStopped() {
-
-        }
-    }
-
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS: {
-                    // Log.i(TAG, "OpenCV loaded successfully");
-                    viewerImg.enableView();
-                    break;
-                } default: {
-                    super.onManagerConnected(status);
-                    break;
-                }
-            }
-        }
-    };
-
 }
