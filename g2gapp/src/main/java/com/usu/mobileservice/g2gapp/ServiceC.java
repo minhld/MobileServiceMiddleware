@@ -20,7 +20,7 @@ import java.io.File;
 public class ServiceC {
 
     @ServiceMethod(syncMode = SyncMode.Async)
-    public int[] resolveImage(Mat img1, Mat img2) {
-        return new int[] { 1, 1, 50, 50 };
+    public Integer[] resolveImage(Mat img1, Mat img2) {
+        return new Integer[] { 1, 1, 50, 50 };
     }
 }
