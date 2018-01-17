@@ -27,6 +27,12 @@ import com.usu.tinyservice.network.ReceiveListener;
 import com.usu.mobileservice.g2gapp.ServiceCClient;
 import com.usu.mobileservice.g2gapp.ServiceCWorker;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -340,7 +346,8 @@ public class MotionDetectActivity extends AppCompatActivity {
         // grant permission - for Android 6.0 and higher
         DevUtils.grandWritePermission(this);
 
-
+        // set listener for Image Viewer
+        viewerImg.setCvCameraViewListener(new CvCameraViewListener2X());
     }
 
     @Override
@@ -353,12 +360,30 @@ public class MotionDetectActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         wfdSupporter.runOnPause();
+        if (viewerImg != null) {
+            viewerImg.disableView();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         wfdSupporter.runOnResume();
+        if (!OpenCVLoader.initDebug()) {
+            UITools.printLog(MotionDetectActivity.this, infoText, "OpenCV library not found.");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, this, mLoaderCallback);
+        } else {
+            UITools.printLog(MotionDetectActivity.this, infoText, "OpenCV library found!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (viewerImg != null) {
+            viewerImg.disableView();
+        }
     }
 
     void initClient(String brokerIp) {
@@ -400,4 +425,38 @@ public class MotionDetectActivity extends AppCompatActivity {
     void initWorker(String brokerIp) {
         new ServiceCWorker(brokerIp);
     }
+
+    class CvCameraViewListener2X implements CameraBridgeViewBase.CvCameraViewListener2 {
+        @Override
+        public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+            return inputFrame.rgba();
+        }
+
+        @Override
+        public void onCameraViewStarted(int width, int height) {
+
+        }
+
+        @Override
+        public void onCameraViewStopped() {
+
+        }
+    }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS: {
+                    // Log.i(TAG, "OpenCV loaded successfully");
+                    viewerImg.enableView();
+                    break;
+                } default: {
+                    super.onManagerConnected(status);
+                    break;
+                }
+            }
+        }
+    };
+
 }
