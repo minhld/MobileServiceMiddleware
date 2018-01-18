@@ -1,5 +1,6 @@
 package com.usu.mobileservice.g2gapp;
 
+import android.graphics.Bitmap;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.os.Bundle;
@@ -31,7 +32,10 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+
+import java.nio.ByteBuffer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -239,7 +243,8 @@ public class MotionDetectActivity extends AppCompatActivity {
                 // start the clock to measure time
                 startTime = System.currentTimeMillis();
 
-                client.resolveImage(null, null);
+                // client.resolveImage(null, null);
+                statusReady = true;
             }
         });
 
@@ -339,7 +344,7 @@ public class MotionDetectActivity extends AppCompatActivity {
                 // start the clock to measure time
                 startTime = System.currentTimeMillis();
 
-                wifiClient.resolveImage(null, null);
+                // wifiClient.resolveImage(null, null);
             }
         });
 
@@ -386,11 +391,18 @@ public class MotionDetectActivity extends AppCompatActivity {
         }
     }
 
+    boolean statusReady = false;
+
     class CvCameraViewListener2X implements CameraBridgeViewBase.CvCameraViewListener2 {
         @Override
         public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
             Mat orgMat = inputFrame.rgba();
-            client.resolveImage(orgMat, orgMat);
+            if (client != null && statusReady) {
+                byte[] bytes = new byte[(int) (orgMat.total() * orgMat.elemSize())];
+                orgMat.get(0, 0, bytes);
+                client.resolveImage(bytes);
+                statusReady = false;
+            }
             return orgMat;
         }
 
@@ -431,9 +443,10 @@ public class MotionDetectActivity extends AppCompatActivity {
                     String msg = (String) resp.outParam.values[0];
                     UITools.printLog(MotionDetectActivity.this, infoText, " Error " + msg);
                 } else if (resp.functionName.equals("resolveImage")) {
-                    String[] msgs = (String[]) resp.outParam.values;
+                    Integer[] vals = (Integer[]) resp.outParam.values;
                     long totalTime = System.currentTimeMillis() - startTime;
-                    UITools.printLog(MotionDetectActivity.this, infoText, msgs[0] + " " + msgs[1] + " in " + totalTime + "ms");
+                    UITools.printLog(MotionDetectActivity.this, infoText, "[" + vals[0] + ", " + vals[1] + ", " + vals[2] + "] in " + totalTime + "ms");
+                    statusReady = true;
                 }
             }
         });
@@ -452,6 +465,7 @@ public class MotionDetectActivity extends AppCompatActivity {
                     String[] msgs = (String[]) resp.outParam.values;
                     long totalTime = System.currentTimeMillis() - startTime;
                     UITools.printLog(MotionDetectActivity.this, infoText, msgs[0] + " " + msgs[1] + " in " + totalTime + "ms");
+                    statusReady = true;
                 }
             }
         });

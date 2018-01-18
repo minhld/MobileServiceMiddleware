@@ -1,5 +1,7 @@
 package com.usu.mobileservice.g2gapp;
 
+import android.graphics.Bitmap;
+
 import com.usu.servicemiddleware.annotations.CommModel;
 import com.usu.servicemiddleware.annotations.MobileService;
 import com.usu.servicemiddleware.annotations.ServiceMethod;
@@ -20,7 +22,7 @@ import java.io.File;
 public class ServiceC {
 
     @ServiceMethod(syncMode = SyncMode.Async)
-    public Integer[] resolveImage(Mat img1, Mat img2) {
+    public Integer[] resolveImage(byte[] img) {
         return new Integer[] { 1, 1, 50, 50 };
     }
 }
