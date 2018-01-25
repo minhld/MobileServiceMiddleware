@@ -23,6 +23,9 @@ import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
 
+import com.usu.mobileservice.g2gapp.ServiceBClient;
+import com.usu.mobileservice.g2gapp.ServiceBWorker;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
