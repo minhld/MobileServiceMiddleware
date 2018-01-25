@@ -1,1 +1,1 @@
-include ':servicemiddleware', ':network', ':g2gapp', ':processors', ':annotations', ':observer', ':OpenCVLibrary320'
+include ':network', ':g2gapp', ':processors', ':annotations', ':observer', ':OpenCVLibrary320'
