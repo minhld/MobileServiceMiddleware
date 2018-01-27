@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/annotations" />
             <option value="$PROJECT_DIR$/g2gapp" />
             <option value="$PROJECT_DIR$/network" />
+            <option value="$PROJECT_DIR$/networkex" />
             <option value="$PROJECT_DIR$/observer" />
             <option value="$PROJECT_DIR$/processors" />
           </set>
