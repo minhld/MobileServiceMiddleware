@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:id="@+id/infoText"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:textSize="11sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/paramsPanel"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/infoText">
+
+        <ListView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/deviceList"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/createGroupBtn"
+            android:layout_marginBottom="0dp" />
+
+        <ListView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/wifiList"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/createGroupBtn"
+            android:layout_marginBottom="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/paramsPanel"
+        android:orientation="horizontal"
+        android:layout_below="@+id/textPanel">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:text="Package Size (KB)"
+            android:textSize="11sp"/>
+
+        <EditText
+            android:id="@+id/packageSizeText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:hint="Package Size"
+            android:textSize="11dp"
+            android:text="1"/>
+
+        <EditText
+            android:id="@+id/aText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:textSize="11dp"
+            android:hint="N/A"/>
+
+        <EditText
+            android:id="@+id/bText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:textSize="11dp"
+            android:hint="N/A"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/textPanel"
+        android:orientation="horizontal"
+        android:layout_below="@+id/wfPanel">
+
+        <EditText
+            android:id="@+id/ipText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="45dp"
+            android:hint="GO IP"
+            android:textSize="11dp" />
+
+        <EditText
+            android:id="@+id/workerPortText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:textSize="11dp"
+            android:text="6666"/>
+
+        <EditText
+            android:id="@+id/clientPortText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:textSize="11dp"
+            android:text="6668"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/wfPanel"
+        android:layout_below="@+id/wfdComponents"
+        android:orientation="horizontal">
+
+        <!--
+        <Button
+            android:text="Search\n WiFi"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/searchWiFiBtn"
+            android:layout_toStartOf="@+id/getWiFiInfoBtn" />
+        -->
+
+        <Button
+            android:text="WiFi\n Info"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/getWiFiInfoBtn"
+            android:layout_toStartOf="@+id/sendWifiDataBtn" />
+
+        <Button
+            android:text="Start\n Broker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWiFiBrokerBtn" />
+
+        <Button
+            android:text="Start\n Worker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWiFiWorkerBtn" />
+
+        <Button
+            android:text="Start\n Client"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWiFiClientBtn" />
+
+        <Button
+            android:text="Send\n Data"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/sendWifiDataBtn" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/wfdComponents"
+        android:layout_below="@+id/wfdPanel">
+
+        <Button
+            android:text="Start\n Client"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startClientBtn" />
+
+        <Button
+            android:text="Send \n Data"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/sendWifiDirectBtn" />
+
+        <Button
+            android:text="Start WFD\n Bridge"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWFDBridgeBtn" />
+
+        <Button
+            android:text="Start WiFi\n Bridge"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWiFiBridgeBtn" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/wfdPanel"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/createGroupBtn"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Create\n Group"
+            android:textSize="9sp" />
+
+        <Button
+            android:text="Disco-\nver"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/discoverBtn" />
+
+        <Button
+            android:text="WFD\n Info"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/getDirectInfoBtn" />
+
+        <Button
+            android:text="Start\n Broker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startBrokerBtn" />
+
+        <Button
+            android:text="Start\n Worker"
+            android:textSize="9sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="45dp"
+            android:id="@+id/startWorkerBtn" />
+
+    </LinearLayout>
+
+</RelativeLayout>

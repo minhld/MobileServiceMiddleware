@@ -1,1 +1,1 @@
-include ':network', ':networkex', ':g2gapp', ':processors', ':annotations', ':observer', ':OpenCVLibrary320'
+include ':network', ':networkex', ':g2gapp', 'g2gexapp', ':processors', ':annotations', ':observer', ':OpenCVLibrary320'

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Enter IP Address:"
+        android:id="@+id/textView" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="45dp"
+            android:text="Local Broker"/>
+
+        <EditText
+            android:id="@+id/localBrokerIpText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:hint="Local Broker IP"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:textColorHint="#ccc"/>
+
+        <EditText
+            android:id="@+id/localWorkerPortText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="6666"
+            android:hint="Wkr. Port"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:textColorHint="#ccc"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="45dp"
+            android:text="Remote Broker"/>
+
+        <EditText
+            android:id="@+id/remoteBrokerIpText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:hint="Remote Broker IP"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:textColorHint="#ccc"/>
+
+        <EditText
+            android:id="@+id/remoteClientPortText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="6668"
+            android:hint="Clt. Port"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:textColorHint="#ccc"/>
+
+    </LinearLayout>
+</LinearLayout>
