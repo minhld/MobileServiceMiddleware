@@ -28,8 +28,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile project(':annotations')
     annotationProcessor project(':processors')
-    compile project(':network')
     implementation project(':OpenCVLibrary320')
+    implementation project(':networkex')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
