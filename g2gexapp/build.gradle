@@ -28,7 +28,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile project(':annotations')
     annotationProcessor project(':processors')
-    implementation project(':OpenCVLibrary320')
     implementation project(':networkex')
 }
 
