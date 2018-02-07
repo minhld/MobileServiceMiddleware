@@ -19,6 +19,7 @@ import com.usu.connection.wfd.WFDSupporter;
 import com.usu.connection.wifi.WiFiSupporter;
 import com.usu.tinyservice.messages.binary.ResponseMessage;
 import com.usu.tinyservice.network.Bridge;
+import com.usu.tinyservice.network.BridgeX;
 import com.usu.tinyservice.network.Broker;
 import com.usu.tinyservice.network.NetUtils;
 import com.usu.tinyservice.network.ReceiveListener;
@@ -246,7 +247,7 @@ public class JobBenchmarkActivity extends AppCompatActivity {
                     public void inputDone(String localBrokerIp, int localWorkerPort,
                                           String remoteBrokerIp, int remoteClientPort) {
                         // string
-                        new Bridge(localBrokerIp, localWorkerPort, remoteBrokerIp, remoteClientPort);
+                        new BridgeX(localBrokerIp, localWorkerPort, remoteBrokerIp, remoteClientPort);
                     }
                 }, routerIp);
             }

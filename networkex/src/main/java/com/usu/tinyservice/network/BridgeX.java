@@ -4,9 +4,9 @@ import com.usu.tinyservice.messages.binary.ResponseMessage;
 import com.usu.tinyservice.network.NetUtils.WorkMode;
 
 /**
- * Bridge is literally a bridge between two brokers. 
- * Bridge holds a worker to the current brokers to receive job
- * and holds a client to the remote broker to forward the job.
+ * BridgeX is literally a bridge between two brokers.
+ * BridgeX is an extended version of Bridge where the inner components
+ * at each edge are Requester and Responder
  * 
  * @author minhld
  *
