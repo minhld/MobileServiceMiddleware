@@ -44,9 +44,6 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
         ImageView imgView = (ImageView) view.findViewById(R.id.bgImage);
         imgView.setOnClickListener(new DetailClick(e));
-        // if (!imgView.hasOnClickListeners()) {
-        //    imgView.setOnClickListener(new DetailClick(e));
-        // }
         Picasso.with(context).load(e.info).fit().into(imgView);
 
         TextView type = (TextView) view.findViewById(R.id.typeText);
