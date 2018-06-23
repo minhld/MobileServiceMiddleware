@@ -3,22 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MobileServiceMiddleware.iml" filepath="$PROJECT_DIR$/MobileServiceMiddleware.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MobileServiceMiddleware.iml" filepath="$PROJECT_DIR$/MobileServiceMiddleware.iml" />
-      <module fileurl="file://$PROJECT_DIR$/OpenCVLibrary320/OpenCVLibrary320.iml" filepath="$PROJECT_DIR$/OpenCVLibrary320/OpenCVLibrary320.iml" />
       <module fileurl="file://$PROJECT_DIR$/OpenCVLibrary320/OpenCVLibrary320.iml" filepath="$PROJECT_DIR$/OpenCVLibrary320/OpenCVLibrary320.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotations/annotations.iml" filepath="$PROJECT_DIR$/annotations/annotations.iml" />
-      <module fileurl="file://$PROJECT_DIR$/annotations/annotations.iml" filepath="$PROJECT_DIR$/annotations/annotations.iml" />
-      <module fileurl="file://$PROJECT_DIR$/g2gapp/g2gapp.iml" filepath="$PROJECT_DIR$/g2gapp/g2gapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/g2gapp/g2gapp.iml" filepath="$PROJECT_DIR$/g2gapp/g2gapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/g2gexapp/g2gexapp.iml" filepath="$PROJECT_DIR$/g2gexapp/g2gexapp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/g2gexapp/g2gexapp.iml" filepath="$PROJECT_DIR$/g2gexapp/g2gexapp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
       <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
       <module fileurl="file://$PROJECT_DIR$/networkex/networkex.iml" filepath="$PROJECT_DIR$/networkex/networkex.iml" />
-      <module fileurl="file://$PROJECT_DIR$/networkex/networkex.iml" filepath="$PROJECT_DIR$/networkex/networkex.iml" />
       <module fileurl="file://$PROJECT_DIR$/observer/observer.iml" filepath="$PROJECT_DIR$/observer/observer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/observer/observer.iml" filepath="$PROJECT_DIR$/observer/observer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/processors/processors.iml" filepath="$PROJECT_DIR$/processors/processors.iml" />
       <module fileurl="file://$PROJECT_DIR$/processors/processors.iml" filepath="$PROJECT_DIR$/processors/processors.iml" />
     </modules>
   </component>

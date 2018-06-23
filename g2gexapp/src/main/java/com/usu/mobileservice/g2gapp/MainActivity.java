@@ -249,19 +249,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // ------ THIRD BUTTON ROW ------
-//        searchWiFiBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-//                        checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    wfSupport.requestPermission(MainActivity.this);
-//                } else {
-//                    // search for Wifi network list
-//                    wfSupport.getWifiConnections();
-//                }
-//            }
-//        });
 
         getWiFiInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
